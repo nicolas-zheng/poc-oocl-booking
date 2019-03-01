@@ -18,10 +18,10 @@
 package io.agilehandy.common.api.bookings;
 
 import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.ShippingBaseEvent;
 import io.agilehandy.common.api.model.Cargo;
 import io.agilehandy.common.api.model.Location;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.time.LocalDateTime;
@@ -31,7 +31,6 @@ import java.util.List;
  * @author Haytham Mohamed
  **/
 @Value
-@AllArgsConstructor
 public class BookingCreatedEvent extends ShippingBaseEvent implements BaseEvent {
 
 	String customerId;
@@ -39,4 +38,15 @@ public class BookingCreatedEvent extends ShippingBaseEvent implements BaseEvent 
 	Location destination;
 	LocalDateTime cutOffDate;
 	List<Cargo> cargoList;
+
+	public BookingCreatedEvent(String id, LocalDateTime dt,
+			String cId, Location origin, Location dest, LocalDateTime cut
+			, List<Cargo> cargos) {
+		super(id, EventTypes.BOOKING_CREATED, dt);
+		this.customerId = cId;
+		this.origin = origin;
+		this.destination = dest;
+		this.cutOffDate = cut;
+		this.cargoList = cargos;
+	}
 }

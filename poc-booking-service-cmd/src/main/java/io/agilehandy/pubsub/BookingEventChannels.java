@@ -15,28 +15,21 @@
  */
 
 
-package io.agilehandy.common.api.bookings;
+package io.agilehandy.pubsub;
 
-import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ShippingBaseCommand;
-import io.agilehandy.common.api.model.Cargo;
-import io.agilehandy.common.api.model.Location;
-import lombok.Data;
+import org.apache.kafka.streams.kstream.KStream;
+import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.messaging.MessageChannel;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
+public interface BookingEventChannels {
 
-/**
- * @author Haytham Mohamed
- **/
-@Data
-public class BookingCreateCommand extends ShippingBaseCommand implements BaseCommand, Serializable {
+	String BOOKING_EVENTS_IN = "input";
+	String BOOKING_EVENTS_OUT = "output";
 
-	String customerId;
-	Location origin;
-	Location destination;
-	LocalDateTime cutOffDate;
-	List<Cargo> cargoList;
+	@Output(BOOKING_EVENTS_OUT)
+	MessageChannel output();
 
+	@Input(BOOKING_EVENTS_IN)
+	KStream<?, ?> input();
 }

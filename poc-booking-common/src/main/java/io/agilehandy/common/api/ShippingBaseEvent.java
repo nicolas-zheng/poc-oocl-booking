@@ -25,7 +25,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * @author Haytham Mohamed
@@ -41,15 +40,13 @@ public class ShippingBaseEvent implements Serializable, BaseEvent {
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime eventTimestamp;
 
-	private Map<String, Object> metadata;
 
 	public ShippingBaseEvent() {}
 
-	public ShippingBaseEvent(String id, String type, LocalDateTime ts, Map<String, Object> md) {
+	public ShippingBaseEvent(String id, String type, LocalDateTime ts) {
 		this.subjectId = id;
 		this.type = type;
 		this.eventTimestamp = ts;
-		this.metadata = md;
 	}
 
 }

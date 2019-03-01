@@ -15,28 +15,20 @@
  */
 
 
-package io.agilehandy.common.api.bookings;
+package io.agilehandy.booking.web;
 
-import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ShippingBaseCommand;
-import io.agilehandy.common.api.model.Cargo;
-import io.agilehandy.common.api.model.Location;
-import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
+import io.agilehandy.common.api.bookings.BookingCreateCommand;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class BookingCreateCommand extends ShippingBaseCommand implements BaseCommand, Serializable {
+@RestController
+public class BookingController {
 
-	String customerId;
-	Location origin;
-	Location destination;
-	LocalDateTime cutOffDate;
-	List<Cargo> cargoList;
-
+	@PostMapping
+	public String createBooking(BookingCreateCommand cmd) {
+		return null;
+	}
 }

@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /booking
+  port: 8080
+
+spring:
+  application:
+    name: Booking_service_command
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: booking-events
+          producer.headerMode: headers
+          contentType: application/json
+        input:
+          destination: booking-events
+          consumer.headerMode: headers
+          contentType: application/json
+          group: booking-events-group
+      kafka:
+        streams:
+          binder:
+            configuration:
+              commit.interval.ms: 1000
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
+        binder:
+          brokers: localhost:9092
+          headers: event_type,kafka_messageKey
+
+

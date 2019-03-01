@@ -18,7 +18,6 @@
 package io.agilehandy.common.api;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public interface BaseEvent {
 
@@ -28,5 +27,4 @@ public interface BaseEvent {
 
 	public LocalDateTime getEventTimestamp();
 
-	public Map<String, Object> getMetadata();
 }
