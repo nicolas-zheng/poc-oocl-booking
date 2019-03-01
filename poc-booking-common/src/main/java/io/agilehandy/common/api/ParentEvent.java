@@ -25,14 +25,15 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
-public class ShippingBaseEvent implements Serializable, BaseEvent {
+public class ParentEvent implements Serializable, BaseEvent {
 
-	private String subjectId;
+	private UUID subjectId;
 
 	private String type;
 
@@ -41,12 +42,12 @@ public class ShippingBaseEvent implements Serializable, BaseEvent {
 	private LocalDateTime eventTimestamp;
 
 
-	public ShippingBaseEvent() {}
+	public ParentEvent() {}
 
-	public ShippingBaseEvent(String id, String type, LocalDateTime ts) {
+	public ParentEvent(UUID id, String type) {
 		this.subjectId = id;
 		this.type = type;
-		this.eventTimestamp = ts;
+		this.eventTimestamp = LocalDateTime.now();
 	}
 
 }

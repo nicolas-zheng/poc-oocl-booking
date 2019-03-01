@@ -24,14 +24,17 @@ public interface EventTypes {
 	public final static String BOOKING_CANCELED = "BOOKING_CANCELED";
 
 	public final static String CARGO_CREATED = "CARGO_CREATED";
+	public final static String CARGO_ADDED = "CARGO_ADDED";
 	public final static String CARGO_UPDATED = "CARGO_UPDATED";
 	public final static String CARGO_CANCELED = "CARGO_CANCELED";
 
 	public final static String LEG_CREATED = "LEG_CREATED";
+	public final static String LEG_ADDED = "LEG_ADDED";
 	public final static String LEG_UPDATED = "LEG_UPDATED";
 	public final static String LEG_CANCELED = "LEG_CANCELED";
 
 	public final static String ROUTE_CREATED = "ROUTE_CREATED";
+	public final static String ROUTE_ADDED = "ROUTE_ADDED";
 	public final static String ROUTE_UPDATED = "ROUTE_UPDATED";
 	public final static String ROUTE_CANCELED = "ROUTE_CANCELED";
 

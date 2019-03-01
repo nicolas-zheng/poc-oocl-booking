@@ -15,28 +15,10 @@
  */
 
 
-package io.agilehandy.common.api;
-
-
-import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
+package io.agilehandy.cargos;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class ShippingBaseCommand implements Serializable, BaseCommand {
-
-	private String subjectId;
-	private LocalDateTime commandTimestamp;
-	private String Type;
-
-	public ShippingBaseCommand() {}
-
-	public ShippingBaseCommand(String id, LocalDateTime ts) {
-		this.subjectId = subjectId;
-		this.commandTimestamp = ts;
-	}
+public class CargoService {
 }

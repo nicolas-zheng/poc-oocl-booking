@@ -18,25 +18,23 @@
 package io.agilehandy.common.api.bookings;
 
 import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ShippingBaseCommand;
-import io.agilehandy.common.api.model.Cargo;
+import io.agilehandy.common.api.ParentCommand;
 import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
-public class BookingCreateCommand extends ShippingBaseCommand implements BaseCommand, Serializable {
+public class BookingCreateCommand extends ParentCommand implements BaseCommand, Serializable {
 
-	String customerId;
+	UUID customerId;
 	Location origin;
 	Location destination;
 	LocalDateTime cutOffDate;
-	List<Cargo> cargoList;
 
 }

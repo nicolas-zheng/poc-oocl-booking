@@ -17,7 +17,7 @@
 
 package io.agilehandy.booking.web;
 
-import io.agilehandy.booking.cmd.Booking;
+import io.agilehandy.booking.entities.Booking;
 import io.agilehandy.pubsub.BookingEventPubSub;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;

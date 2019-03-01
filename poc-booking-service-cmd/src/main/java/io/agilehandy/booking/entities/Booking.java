@@ -15,14 +15,16 @@
  */
 
 
-package io.agilehandy.booking.cmd;
+package io.agilehandy.booking.entities;
 
 import io.agilehandy.common.api.BaseEvent;
 import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
-import io.agilehandy.common.api.model.Cargo;
+import io.agilehandy.common.api.cargos.CargoAddCommand;
+import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.common.api.model.Location;
+import io.agilehandy.common.api.routes.RouteAddCommand;
 import javaslang.API;
 import javaslang.Predicates;
 import lombok.Data;
@@ -47,31 +49,27 @@ public class Booking {
 
 	private List<BaseEvent> cache = new ArrayList<>();
 
-	String id;
+	UUID id;
 
-	String customerId;
+	UUID customerId;
 	Location origin;
 	Location destination;
 	LocalDateTime cutOffDate;
 
 	List<Cargo> cargoList;
 	List<Route> routeList;
-	List<Leg> LegList;
+	List<Leg> legList;
 
 	public Booking() {}
 
 	public Booking(BookingCreateCommand cmd) {
 		// TODO: perform any business validation here
-
 		BookingCreatedEvent event =
-				new BookingCreatedEvent(UUID.randomUUID().toString(),
-						LocalDateTime.now(),
+				new BookingCreatedEvent(UUID.randomUUID(),
 						cmd.getCustomerId(),
 						cmd.getOrigin(),
 						cmd.getDestination(),
-						cmd.getCutOffDate(),
-						cmd.getCargoList());
-
+						cmd.getCutOffDate());
 		bookingCreated(event);
 	}
 
@@ -82,9 +80,22 @@ public class Booking {
 		this.origin = event.getOrigin();
 		this.destination = event.getDestination();
 		cargoList = new ArrayList<>();
-		event.getCargoList().stream().forEach(cargo -> cargoList.add(cargo));
+		routeList = new ArrayList<>();
+		legList = new ArrayList<>();
 		this.cacheEvent(event);
 		return this;
+	}
+
+	public void addCargo(CargoAddCommand cmd) {
+		newCargoMember().add(cmd);
+	}
+
+	public void addRoute(Cargo cargo, RouteAddCommand cmd) {
+		newRouteMember(cargo).add(cmd);
+	}
+
+	public void addLeg(Route route, LegAddCommand cmd) {
+		newLegMember(route).add(cmd);
 	}
 
 	public Booking handleEvent(BaseEvent event) {
@@ -102,4 +113,47 @@ public class Booking {
 	public void clearEventCache() {
 		this.cache.clear();
 	}
+
+
+	public Cargo newCargoMember() {
+		Cargo cargo = new Cargo();
+		cargo.setBooking(this);
+		this.cargoList.add(cargo); // set parent
+		return cargo;
+	}
+
+	public Route newRouteMember(Cargo cargo) {
+		Route route = new Route();
+		route.setCargo(cargo); // set parent
+		this.routeList.add(route);
+		return route;
+	}
+
+	public Leg newLegMember(Route route) {
+		Leg leg = new Leg();
+		leg.setRoute(route); // set parent
+		this.legList.add(leg);
+		return leg;
+	}
+
+	public Cargo cargoMember(UUID cargoId) {
+		return cargoList.stream()
+				.filter(c -> c.getBooking().getId() == getId() && c.getId() == cargoId)
+				.findFirst().orElse(new Cargo());
+	}
+
+	public Route routeMember(UUID routeId) {
+		return routeList.stream()
+				.filter(r -> r.getId() == routeId)
+				.findFirst()
+				.orElse(new Route());
+	}
+
+	public Leg legMember(UUID legId) {
+		return legList.stream()
+				.filter(l -> l.getId() == id)
+				.findFirst()
+				.orElse(new Leg());
+	}
+
 }

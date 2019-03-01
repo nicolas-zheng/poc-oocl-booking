@@ -15,18 +15,10 @@
  */
 
 
-package io.agilehandy.common.api.model;
-
-import java.time.LocalDateTime;
+package io.agilehandy.cargos;
 
 /**
  * @author Haytham Mohamed
  **/
-public class Transition {
-
-	Leg leg;
-	TransportationType type;
-	LocalDateTime pickupTime;
-	LocalDateTime dropOffTime;
-
+public class cargoController {
 }

@@ -18,10 +18,11 @@
 package io.agilehandy.common.api;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public interface BaseEvent {
 
-	public String getSubjectId();
+	public UUID getSubjectId();
 
 	public String getType();
 

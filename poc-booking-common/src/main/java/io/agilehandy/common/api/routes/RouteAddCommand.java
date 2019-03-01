@@ -15,10 +15,25 @@
  */
 
 
-package io.agilehandy.booking.cmd;
+package io.agilehandy.common.api.routes;
+
+import io.agilehandy.common.api.BaseCommand;
+import io.agilehandy.common.api.ParentCommand;
+import io.agilehandy.common.api.model.Location;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
-public class Cargo {
+@Data
+public class RouteAddCommand extends ParentCommand implements BaseCommand, Serializable {
+
+	UUID routeId;
+
+	Location origin;
+	Location destination;
+
 }

@@ -15,25 +15,13 @@
  */
 
 
-package io.agilehandy.common.api.cargos;
+package io.agilehandy.cargos;
 
-import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ShippingBaseCommand;
-import io.agilehandy.common.api.model.CargoNature;
-import io.agilehandy.common.api.model.ContainerSize;
-import lombok.Data;
-
-import java.io.Serializable;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class CargoCreateCommand extends ShippingBaseCommand implements BaseCommand, Serializable {
-
-	String bookingId;
-
-	CargoNature nature;
-	ContainerSize requiredSize;
-
+@Component
+public class CargoRepository {
 }

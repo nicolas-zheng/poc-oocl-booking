@@ -18,10 +18,11 @@
 package io.agilehandy.common.api;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public interface BaseCommand {
 
-	public String getSubjectId();
+	public UUID getSubjectId();
 
 	public LocalDateTime getCommandTimestamp();
 

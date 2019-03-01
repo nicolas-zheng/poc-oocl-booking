@@ -15,10 +15,29 @@
  */
 
 
-package io.agilehandy.booking.cmd;
+package io.agilehandy.common.api;
+
+
+import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
-public class Route {
+@Data
+public class ParentCommand implements Serializable, BaseCommand {
+
+	private UUID subjectId;
+	private LocalDateTime commandTimestamp;
+	private String Type;
+
+	public ParentCommand() {}
+
+	public ParentCommand(UUID id, LocalDateTime ts) {
+		this.subjectId = subjectId;
+		this.commandTimestamp = ts;
+	}
 }

@@ -15,10 +15,26 @@
  */
 
 
-package io.agilehandy.booking.cmd;
+package io.agilehandy.common.api.cargos;
+
+import io.agilehandy.common.api.BaseCommand;
+import io.agilehandy.common.api.ParentCommand;
+import io.agilehandy.common.api.model.CargoNature;
+import io.agilehandy.common.api.model.ContainerSize;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
-public class Leg {
+@Data
+public class CargoAddCommand extends ParentCommand implements BaseCommand, Serializable {
+
+	UUID cargoId;
+
+	CargoNature nature;
+	ContainerSize requiredSize;
+
 }

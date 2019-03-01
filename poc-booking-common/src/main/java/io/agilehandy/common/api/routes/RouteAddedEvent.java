@@ -15,16 +15,34 @@
  */
 
 
-package io.agilehandy.common.api.model;
+package io.agilehandy.common.api.routes;
 
-import lombok.Data;
+import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.EventTypes;
+import io.agilehandy.common.api.ParentEvent;
+import io.agilehandy.common.api.model.Location;
+import lombok.Value;
+
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class Leg {
+@Value
+public class RouteAddedEvent extends ParentEvent implements BaseEvent {
+
+	UUID bookingId;
+	UUID cargoId;
 
 	Location origin;
 	Location destination;
+
+	public RouteAddedEvent(UUID subjectId, UUID bookingId, UUID cargoId, Location origin, Location dest) {
+		super(subjectId, EventTypes.ROUTE_ADDED);
+		this.bookingId = bookingId;
+		this.cargoId = cargoId;
+		this.origin = origin;
+		this.destination = dest;
+	}
+
 }

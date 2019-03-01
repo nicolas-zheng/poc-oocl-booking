@@ -18,7 +18,7 @@
 package io.agilehandy.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.agilehandy.booking.cmd.Booking;
+import io.agilehandy.booking.entities.Booking;
 import io.agilehandy.common.api.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
