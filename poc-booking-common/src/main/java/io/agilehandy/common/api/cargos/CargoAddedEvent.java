@@ -32,15 +32,15 @@ import java.util.UUID;
 @Value
 public class CargoAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
+	UUID cargoId;
 
 	CargoNature nature;
 	ContainerSize requiredSize;
 
-	public CargoAddedEvent(UUID subjectId, UUID bookingId, CargoNature nature
+	public CargoAddedEvent(UUID subjectId, UUID cargoId, CargoNature nature
 			, ContainerSize requiredSize) {
 		super(subjectId, EventTypes.CARGO_ADDED);
-		this.bookingId = bookingId;
+		this.cargoId = cargoId;
 		this.nature = nature;
 		this.requiredSize = requiredSize;
 	}

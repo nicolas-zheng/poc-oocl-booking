@@ -34,19 +34,19 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LegAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
 	UUID cargoId;
 	UUID routeId;
+	UUID legId;
 	Location startLocation;
 	Location endLocation;
 	TransportationType transType;
 
-	public LegAddedEvent(UUID subjectId, UUID bookingId, UUID cargoId, UUID routeId,
+	public LegAddedEvent(UUID subjectId, UUID cargoId, UUID routeId, UUID legId,
 	                     Location start, Location end, TransportationType type) {
 		super(subjectId, EventTypes.LEG_ADDED);
-		this.bookingId = bookingId;
 		this.cargoId = cargoId;
 		this.routeId = routeId;
+		this.legId = legId;
 		this.startLocation = start;
 		this.endLocation = end;
 		this.transType = type;

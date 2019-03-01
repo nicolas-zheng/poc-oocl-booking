@@ -17,14 +17,11 @@
 
 package io.agilehandy.booking.entities;
 
-import io.agilehandy.common.api.BaseEvent;
-import io.agilehandy.common.api.cargos.CargoAddCommand;
 import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.util.UUID;
 
@@ -36,35 +33,21 @@ import java.util.UUID;
 public class Cargo {
 
 	UUID id;
+	UUID bookingId;
 
 	CargoNature nature;
 	ContainerSize requiredSize;
 	ContainerSize assignedSize;
 
-	// parent
-	Booking booking;
-
-	public void add(CargoAddCommand cmd) {
-		Assert.notNull(booking, "Cargo should have its parent Booking aggregate set");
-
-		CargoAddedEvent event =
-				new CargoAddedEvent(UUID.randomUUID(), booking.getId()
-						,cmd.getNature(), cmd.getRequiredSize());
-
-		cargoAdded(event);
+	public Cargo(UUID bookingId, UUID cargoId) {
+		this.id = cargoId;
+		this.bookingId = bookingId;
 	}
 
-	private Booking cargoAdded(CargoAddedEvent event) {
+	public void cargoAdded(CargoAddedEvent event) {
 		this.id = event.getSubjectId();
 		this.nature = event.getNature();
 		this.requiredSize = event.getRequiredSize();
-		this.cacheEvent(event);
-		return booking;
 	}
-
-	public void cacheEvent(BaseEvent event) {
-		booking.getCache().add(event);
-	}
-
 
 }

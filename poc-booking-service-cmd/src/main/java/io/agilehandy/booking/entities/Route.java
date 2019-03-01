@@ -17,12 +17,9 @@
 
 package io.agilehandy.booking.entities;
 
-import io.agilehandy.common.api.BaseEvent;
-import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.util.UUID;
 
@@ -34,26 +31,19 @@ import java.util.UUID;
 public class Route {
 
 	UUID id;
+	UUID bookingId;
+	UUID cargoId;
 
-	// parent
-	Cargo cargo;
+	public Route(UUID bookingId, UUID cargoId, UUID routeId) {
+		this.bookingId = bookingId;
+		this.cargoId = cargoId;
+		this.id = routeId;
+	}
 
-	public void add(RouteAddCommand cmd) {
-		Assert.notNull(cargo, "Route should have its parent Cargo aggregate set");
-
-		RouteAddedEvent event =
-				new RouteAddedEvent(UUID.randomUUID(), cargo.getBooking().getId()
-						, cargo.getId(), cmd.getOrigin(), cmd.getDestination());
-		RouteAdded(event);
-}
-
-	private Booking RouteAdded(RouteAddedEvent event) {
+	public void routeAdded(RouteAddedEvent event) {
 		this.id = event.getSubjectId();
-		this.cacheEvent(event);
-		return cargo.getBooking();
+		this.bookingId = event.getSubjectId();
+		this.cargoId = event.getCargoId();
 	}
 
-	public void cacheEvent(BaseEvent event) {
-		cargo.getBooking().getCache().add(event);
-	}
 }

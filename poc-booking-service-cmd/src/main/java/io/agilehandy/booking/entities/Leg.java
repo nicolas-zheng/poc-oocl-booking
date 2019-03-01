@@ -17,14 +17,11 @@
 
 package io.agilehandy.booking.entities;
 
-import io.agilehandy.common.api.BaseEvent;
-import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.model.TransportationType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -37,6 +34,9 @@ import java.util.UUID;
 public class Leg {
 
 	UUID id;
+	UUID bookingId;
+	UUID cargoId;
+	UUID routeId;
 
 	Location startLocation;
 	Location endLocation;
@@ -47,27 +47,18 @@ public class Leg {
 	// parent
 	Route route;
 
-	public void add(LegAddCommand cmd) {
-		Assert.notNull(route, "Leg should have its parent Route aggregate set");
-
-		LegAddedEvent event =
-				new LegAddedEvent(UUID.randomUUID(), route.getCargo().getBooking().getId(),
-						route.getCargo().getId(), route.getId(), cmd.getStartLocation(),
-						cmd.getEndLocation(), cmd.getTransportationType());
-		LegAdded(event);
+	public Leg(UUID bookingId, UUID cargoId, UUID routeId, UUID legId) {
+		this.bookingId = bookingId;
+		this.cargoId = cargoId;
+		this.id = legId;
+		this.routeId = routeId;
 	}
 
-	private Booking LegAdded(LegAddedEvent event) {
+	public void legAdded(LegAddedEvent event) {
 		this.id = event.getSubjectId();
 		this.startLocation = event.getStartLocation();
 		this.endLocation = event.getEndLocation();
 		this.transType = event.getTransType();
-		this.cacheEvent(event);
-		return route.getCargo().getBooking();
-	}
-
-	public void cacheEvent(BaseEvent event) {
-		route.getCargo().getBooking().getCache().add(event);
 	}
 
 }

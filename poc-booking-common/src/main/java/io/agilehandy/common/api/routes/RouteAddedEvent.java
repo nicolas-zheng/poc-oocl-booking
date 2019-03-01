@@ -31,15 +31,13 @@ import java.util.UUID;
 @Value
 public class RouteAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
 	UUID cargoId;
 
 	Location origin;
 	Location destination;
 
-	public RouteAddedEvent(UUID subjectId, UUID bookingId, UUID cargoId, Location origin, Location dest) {
+	public RouteAddedEvent(UUID subjectId, UUID cargoId, Location origin, Location dest) {
 		super(subjectId, EventTypes.ROUTE_ADDED);
-		this.bookingId = bookingId;
 		this.cargoId = cargoId;
 		this.origin = origin;
 		this.destination = dest;

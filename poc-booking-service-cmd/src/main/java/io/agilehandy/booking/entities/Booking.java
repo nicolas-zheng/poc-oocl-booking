@@ -22,9 +22,12 @@ import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
 import io.agilehandy.common.api.cargos.CargoAddCommand;
+import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.legs.LegAddCommand;
+import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddCommand;
+import io.agilehandy.common.api.routes.RouteAddedEvent;
 import javaslang.API;
 import javaslang.Predicates;
 import lombok.Data;
@@ -87,22 +90,52 @@ public class Booking {
 	}
 
 	public void addCargo(CargoAddCommand cmd) {
-		newCargoMember().add(cmd);
+		CargoAddedEvent event =
+				new CargoAddedEvent(this.getId(), UUID.randomUUID()
+						,cmd.getNature(), cmd.getRequiredSize());
+
+		this.cargoAdded(event);
 	}
 
-	public void addRoute(Cargo cargo, RouteAddCommand cmd) {
-		newRouteMember(cargo).add(cmd);
+	public Booking cargoAdded(CargoAddedEvent event) {
+		cargoMember(event.getCargoId()).cargoAdded(event);
+		cacheEvent(event);
+		return this;
 	}
 
-	public void addLeg(Route route, LegAddCommand cmd) {
-		newLegMember(route).add(cmd);
+	public void addRoute(RouteAddCommand cmd) {
+		RouteAddedEvent event =
+				new RouteAddedEvent(this.getId(), UUID.randomUUID()
+						, cmd.getOrigin(), cmd.getDestination());
+		this.routeAdded(event);
+	}
+
+	public Booking routeAdded(RouteAddedEvent event) {
+		routeMember(event.getCargoId(), UUID.randomUUID()).routeAdded(event);
+		cacheEvent(event);
+		return this;
+	}
+
+	public void addLeg(LegAddCommand cmd) {
+		LegAddedEvent event =
+				new LegAddedEvent(cmd.getSubjectId(), cmd.getCargoId(), cmd.getRouteId(),
+						UUID.randomUUID(), cmd.getStartLocation(),
+						cmd.getEndLocation(), cmd.getTransportationType());
+		this.legAdded(event);
+	}
+
+	public Booking legAdded(LegAddedEvent event) {
+		legMember(event.getCargoId(), event.getRouteId(), UUID.randomUUID()).legAdded(event);
+		cacheEvent(event);
+		return this;
 	}
 
 	public Booking handleEvent(BaseEvent event) {
 		return API.Match(event.getType()).of(
 				Case(Predicates.is(EventTypes.BOOKING_CREATED), this.bookingCreated((BookingCreatedEvent) event))
-				//, Case(Predicates.is(EventTypes.BOOKING_UPDATED), this.pikeRented((BikeRentedEvent) event))
-				//, Case(Predicates.is(EventTypes.BOOKING_CANCELED), this.pikeReturned((BikeReturnedEvent) event))
+				, Case(Predicates.is(EventTypes.CARGO_ADDED), this.cargoAdded((CargoAddedEvent) event))
+				, Case(Predicates.is(EventTypes.ROUTE_ADDED), this.routeAdded((RouteAddedEvent) event))
+				, Case(Predicates.is(EventTypes.LEG_ADDED), this.legAdded((LegAddedEvent) event))
 		);
 	}
 
@@ -113,47 +146,32 @@ public class Booking {
 	public void clearEventCache() {
 		this.cache.clear();
 	}
-
-
-	public Cargo newCargoMember() {
-		Cargo cargo = new Cargo();
-		cargo.setBooking(this);
+	
+	public Cargo cargoMember(UUID cargoId) {
+		Cargo cargo = cargoList.stream()
+				.filter(c -> c.getId() == cargoId)
+				.findFirst().orElse(new Cargo(this.getId(), cargoId));
 		this.cargoList.add(cargo); // set parent
 		return cargo;
 	}
 
-	public Route newRouteMember(Cargo cargo) {
-		Route route = new Route();
-		route.setCargo(cargo); // set parent
+	public Route routeMember(UUID cargoId, UUID routeId) {
+		Route route = routeList.stream()
+				.filter(r -> r.getId() == routeId)
+				.findFirst()
+				.orElse(new Route(this.getId(), cargoId, routeId));
 		this.routeList.add(route);
 		return route;
 	}
 
-	public Leg newLegMember(Route route) {
-		Leg leg = new Leg();
-		leg.setRoute(route); // set parent
-		this.legList.add(leg);
-		return leg;
-	}
-
-	public Cargo cargoMember(UUID cargoId) {
-		return cargoList.stream()
-				.filter(c -> c.getBooking().getId() == getId() && c.getId() == cargoId)
-				.findFirst().orElse(new Cargo());
-	}
-
-	public Route routeMember(UUID routeId) {
-		return routeList.stream()
-				.filter(r -> r.getId() == routeId)
-				.findFirst()
-				.orElse(new Route());
-	}
-
-	public Leg legMember(UUID legId) {
-		return legList.stream()
+	public Leg legMember(UUID cargoId, UUID routeId, UUID legId) {
+		Leg leg = legList.stream()
 				.filter(l -> l.getId() == id)
 				.findFirst()
-				.orElse(new Leg());
+				.orElse(new Leg(this.getId(), cargoId, routeId, legId));
+		leg.setRoute(routeMember(cargoId, routeId)); // set parent
+		this.legList.add(leg);
+		return leg;
 	}
 
 }

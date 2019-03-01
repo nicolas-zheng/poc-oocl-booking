@@ -31,6 +31,7 @@ import java.util.UUID;
 @Data
 public class RouteAddCommand extends ParentCommand implements BaseCommand, Serializable {
 
+	UUID cargoId;
 	UUID routeId;
 
 	Location origin;
