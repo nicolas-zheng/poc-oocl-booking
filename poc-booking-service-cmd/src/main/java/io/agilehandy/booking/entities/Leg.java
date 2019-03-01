@@ -44,9 +44,6 @@ public class Leg {
 	LocalDateTime pickupTime;
 	LocalDateTime dropOffTime;
 
-	// parent
-	Route route;
-
 	public Leg(UUID bookingId, UUID cargoId, UUID routeId, UUID legId) {
 		this.bookingId = bookingId;
 		this.cargoId = cargoId;

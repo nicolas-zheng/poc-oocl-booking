@@ -146,7 +146,7 @@ public class Booking {
 	public void clearEventCache() {
 		this.cache.clear();
 	}
-	
+
 	public Cargo cargoMember(UUID cargoId) {
 		Cargo cargo = cargoList.stream()
 				.filter(c -> c.getId() == cargoId)
@@ -169,7 +169,6 @@ public class Booking {
 				.filter(l -> l.getId() == id)
 				.findFirst()
 				.orElse(new Leg(this.getId(), cargoId, routeId, legId));
-		leg.setRoute(routeMember(cargoId, routeId)); // set parent
 		this.legList.add(leg);
 		return leg;
 	}
