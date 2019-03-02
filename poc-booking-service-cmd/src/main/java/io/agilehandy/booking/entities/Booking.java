@@ -23,6 +23,9 @@ import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
 import io.agilehandy.common.api.cargos.CargoAddCommand;
 import io.agilehandy.common.api.cargos.CargoAddedEvent;
+import io.agilehandy.common.api.exceptions.CargoNotFoundException;
+import io.agilehandy.common.api.exceptions.LegNotFoundException;
+import io.agilehandy.common.api.exceptions.RouteNotFoundException;
 import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.model.Location;
@@ -143,6 +146,33 @@ public class Booking {
 
 	public void clearEventCache() {
 		this.cache.clear();
+	}
+
+	public Cargo getCargo(UUID cargoId) {
+		return cargoList.stream()
+				.filter(c -> c.getId() == cargoId)
+				.findFirst()
+				.orElseThrow(() -> new CargoNotFoundException(
+						String.format("No Cargo found with %s ", cargoId)));
+	}
+
+	public Route getRoute(UUID cargoId, UUID routeId) {
+		Cargo cargo = getCargo(cargoId);
+		return cargo.getRouteList().stream().filter(r -> r.id == routeId)
+				.findFirst()
+				.orElseThrow(() ->
+						new RouteNotFoundException(String.format(
+							"No Route found with id %s for Cargo id %s ", routeId, cargoId)));
+	}
+
+	public Leg getLeg(UUID cargoId, UUID routeId, UUID legId) {
+		Route route = getRoute(cargoId, routeId);
+		return route.getLegList().stream().filter(l -> l.id == legId)
+				.findFirst()
+				.orElseThrow(() ->
+						new LegNotFoundException(String.format(
+							"No Leg found with id %s for Cargo id %s and Route id %s"
+								, legId, cargoId, routeId)));
 	}
 
 	public Cargo cargoMember(UUID cargoId) {
