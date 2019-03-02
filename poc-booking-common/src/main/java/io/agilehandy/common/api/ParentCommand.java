@@ -31,13 +31,13 @@ import java.util.UUID;
 public class ParentCommand implements Serializable, BaseCommand {
 
 	private UUID subjectId;
-	private LocalDateTime commandTimestamp;
+	private LocalDateTime occurredOn;
 	private String Type;
 
 	public ParentCommand() {}
 
-	public ParentCommand(UUID id, LocalDateTime ts) {
+	public ParentCommand(UUID id) {
 		this.subjectId = subjectId;
-		this.commandTimestamp = ts;
+		this.occurredOn = LocalDateTime.now();
 	}
 }

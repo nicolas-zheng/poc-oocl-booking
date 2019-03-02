@@ -26,6 +26,6 @@ public interface BaseEvent {
 
 	public String getType();
 
-	public LocalDateTime getEventTimestamp();
+	public LocalDateTime getOccurredOn();
 
 }

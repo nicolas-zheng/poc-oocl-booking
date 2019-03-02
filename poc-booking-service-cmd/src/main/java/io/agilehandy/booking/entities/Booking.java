@@ -130,7 +130,7 @@ public class Booking {
 		return this;
 	}
 
-	public Booking handleEvent(BaseEvent event) {
+	public Booking handleEvent(final BaseEvent event) {
 		return API.Match(event.getType()).of(
 				Case(Predicates.is(EventTypes.BOOKING_CREATED), this.bookingCreated((BookingCreatedEvent) event))
 				, Case(Predicates.is(EventTypes.CARGO_ADDED), this.cargoAdded((CargoAddedEvent) event))

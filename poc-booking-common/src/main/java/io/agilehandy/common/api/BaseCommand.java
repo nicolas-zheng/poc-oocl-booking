@@ -24,7 +24,7 @@ public interface BaseCommand {
 
 	public UUID getSubjectId();
 
-	public LocalDateTime getCommandTimestamp();
+	public LocalDateTime getOccurredOn();
 
 	public String getType();
 }

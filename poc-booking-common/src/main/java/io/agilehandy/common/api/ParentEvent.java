@@ -39,7 +39,7 @@ public class ParentEvent implements Serializable, BaseEvent {
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDateTime eventTimestamp;
+	private LocalDateTime occurredOn;
 
 
 	public ParentEvent() {}
@@ -47,7 +47,7 @@ public class ParentEvent implements Serializable, BaseEvent {
 	public ParentEvent(UUID id, String type) {
 		this.subjectId = id;
 		this.type = type;
-		this.eventTimestamp = LocalDateTime.now();
+		this.occurredOn = LocalDateTime.now();
 	}
 
 }
