@@ -17,27 +17,43 @@
 
 package io.agilehandy.common.api.legs;
 
-import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ParentCommand;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.agilehandy.common.api.BookingCommand;
 import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.model.TransportationType;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
-public class LegAddCommand extends ParentCommand implements BaseCommand, Serializable {
+public class LegAddCommand implements BookingCommand, Serializable {
 
-	String bookingId;
-	String cargoId;
-	String routeId;
+	private String bookingId;
+	private String cargoId;
+	private String routeId;
 
-	Location startLocation;
-	Location endLocation;
-	TransportationType transType;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime occurredOn;
+
+	private Location startLocation;
+	private Location endLocation;
+	private TransportationType transType;
+
+	public LegAddCommand() {
+		this.occurredOn = LocalDateTime.now();
+	}
 
 	@Data
 	public static class Builder {

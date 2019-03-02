@@ -17,48 +17,42 @@
 
 package io.agilehandy.common.api.bookings;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
-import io.agilehandy.common.api.ParentEvent;
-import io.agilehandy.common.api.model.Location;
-import lombok.Value;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class BookingCreatedEvent extends ParentEvent implements BaseEvent {
 
-	String customerId;
-	Location origin;
-	Location destination;
+@Data
+@NoArgsConstructor
+public class BookingCreatedEvent extends BookingBaseEvent implements BookingEvent {
+
+	private String customerId;
+	private String origin;
+	private String destination;
 
 	@JsonSerialize(using = LocalDateSerializer.class)
 	@JsonDeserialize(using = LocalDateDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	LocalDate cutOffDate;
+	private LocalDate cutOffDate;
 
-	public BookingCreatedEvent() {
-		this(null, null, null, null, null);
-	}
-
-	public BookingCreatedEvent(String bookingId, String customerId, Location origin
-			, Location dest, LocalDate cut) {
-		super(EventTypes.BOOKING_CREATED);
+	public BookingCreatedEvent(String bookingId,String customerId,String origin
+			,String destintation,LocalDate cutOffDate) {
+		super(bookingId, EventTypes.BOOKING_CREATED);
 		this.setBookingId(bookingId);
 		this.customerId = customerId;
 		this.origin = origin;
-		this.destination = dest;
-		this.cutOffDate = cut;
+		this.destination = destination;
+		this.cutOffDate = cutOffDate;
 	}
 
 }

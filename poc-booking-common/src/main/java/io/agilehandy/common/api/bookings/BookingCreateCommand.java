@@ -21,31 +21,40 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import io.agilehandy.common.api.BaseCommand;
-import io.agilehandy.common.api.ParentCommand;
-import io.agilehandy.common.api.model.Location;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.agilehandy.common.api.BookingCommand;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
-public class BookingCreateCommand extends ParentCommand implements BaseCommand, Serializable {
+public class BookingCreateCommand implements BookingCommand, Serializable {
 
-	String customerId;
-	Location origin;
-	Location destination;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime occurredOn;
+
+	private String customerId;
+	private String origin;
+	private String destination;
 
 	@JsonSerialize(using = LocalDateSerializer.class)
 	@JsonDeserialize(using = LocalDateDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	LocalDate cutOffDate;
+	private LocalDate cutOffDate;
+
+	public BookingCreateCommand() {
+		this.occurredOn = LocalDateTime.now();
+	}
 
 	@Data
 	public static class Builder {
@@ -67,12 +76,12 @@ public class BookingCreateCommand extends ParentCommand implements BaseCommand, 
 			return this;
 		}
 
-		public Builder setOrigin(Location origin) {
+		public Builder setOrigin(String origin) {
 			commandToBuild.setOrigin(origin);
 			return this;
 		}
 
-		public Builder setDestination(Location destination) {
+		public Builder setDestination(String destination) {
 			commandToBuild.setDestination(destination);
 			return this;
 		}

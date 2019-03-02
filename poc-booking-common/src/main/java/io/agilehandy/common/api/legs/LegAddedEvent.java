@@ -17,30 +17,33 @@
 
 package io.agilehandy.common.api.legs;
 
-import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
-import io.agilehandy.common.api.ParentEvent;
 import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.model.TransportationType;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class LegAddedEvent extends ParentEvent implements BaseEvent {
 
-	String cargoId;
-	String routeId;
-	String legId;
+@Data
+@NoArgsConstructor
+public class LegAddedEvent extends BookingBaseEvent implements BookingEvent {
 
-	Location startLocation;
-	Location endLocation;
-	TransportationType transType;
+	private String cargoId;
+	private String routeId;
+	private String legId;
+
+	private Location startLocation;
+	private Location endLocation;
+	private TransportationType transType;
 
 	public LegAddedEvent(String bookingId, String cargoId, String routeId, String legId,
 	                     Location start, Location end, TransportationType type) {
-		super(EventTypes.LEG_ADDED);
+		super(bookingId, EventTypes.LEG_ADDED);
 		this.setBookingId(bookingId);
 		this.cargoId = cargoId;
 		this.routeId = routeId;

@@ -30,7 +30,7 @@ public class CommonService {
 		Booking booking = repository.findById(bookingId.toString());
 		if (booking == null) {
 			throw new BookingNotFoundException(
-					String.format("Booking with id %is is not found", bookingId));
+					String.format("Booking with id %s is not found", bookingId));
 		}
 		return  booking;
 	}

@@ -17,7 +17,8 @@
 
 package io.agilehandy.core.entities;
 
-import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
@@ -53,7 +54,7 @@ import static javaslang.API.*;
 @Slf4j
 public class Booking {
 
-	private List<BaseEvent> cache = new ArrayList<>();
+	private List<BookingBaseEvent> cache = new ArrayList<>();
 
 	UUID id;
 
@@ -81,8 +82,8 @@ public class Booking {
 		this.id = UUID.fromString(event.getBookingId());
 		this.customerId = UUID.fromString(event.getCustomerId());
 		this.cutOffDate = event.getCutOffDate();
-		this.origin = event.getOrigin();
-		this.destination = event.getDestination();
+		this.origin = new Location(event.getOrigin());
+		this.destination = new Location(event.getDestination());
 		cargoList = new ArrayList<>();
 		this.cacheEvent(event);
 		return this;
@@ -139,7 +140,7 @@ public class Booking {
 		return this;
 	}
 
-	public Booking handleEvent(final BaseEvent event) {
+	public Booking handleEvent(BookingEvent event) {
 		return API.Match(event.getType()).of(
 				Case(Predicates.is(EventTypes.BOOKING_CREATED), this.bookingCreated((BookingCreatedEvent) event))
 				, Case(Predicates.is(EventTypes.CARGO_ADDED), this.cargoAdded((CargoAddedEvent) event))
@@ -148,7 +149,7 @@ public class Booking {
 		);
 	}
 
-	public void cacheEvent(BaseEvent event) {
+	public void cacheEvent(BookingBaseEvent event) {
 		cache.add(event);
 	}
 

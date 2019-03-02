@@ -19,6 +19,8 @@ package io.agilehandy.common.api;
 
 public interface EventTypes {
 
+	public final static String UNKNOWN_EVENT = "UNKNOWN_EVENT";
+
 	public final static String BOOKING_CREATED = "BOOKING_CREATED";
 	public final static String BOOKING_UPDATED = "BOOKING_UPDATED";
 	public final static String BOOKING_CANCELED = "BOOKING_CANCELED";

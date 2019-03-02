@@ -17,14 +17,11 @@
 
 package io.agilehandy.common.api;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -33,15 +30,22 @@ import java.time.LocalDateTime;
  * @author Haytham Mohamed
  **/
 @Data
-public class ParentCommand implements Serializable, BaseCommand {
+public class BookingBaseEvent implements Serializable {
+
+	private String bookingId;
+	private String type;
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime occurredOn;
 
-	public ParentCommand() {
+	public BookingBaseEvent() {
+		this.occurredOn = LocalDateTime.now();
+	}
+
+	public BookingBaseEvent(String bookingId, String type) {
+		this.bookingId = bookingId;
+		this.type = type;
 		this.occurredOn = LocalDateTime.now();
 	}
 }

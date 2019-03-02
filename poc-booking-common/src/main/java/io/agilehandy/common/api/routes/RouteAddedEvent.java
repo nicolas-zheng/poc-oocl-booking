@@ -17,26 +17,29 @@
 
 package io.agilehandy.common.api.routes;
 
-import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
-import io.agilehandy.common.api.ParentEvent;
 import io.agilehandy.common.api.model.Location;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class RouteAddedEvent extends ParentEvent implements BaseEvent {
 
-	String cargoId;
-	String routeId;
+@Data
+@NoArgsConstructor
+public class RouteAddedEvent extends BookingBaseEvent implements BookingEvent {
 
-	Location origin;
-	Location destination;
+	private String cargoId;
+	private String routeId;
+
+	private Location origin;
+	private Location destination;
 
 	public RouteAddedEvent(String bookingId, String cargoId, String routeId, Location origin, Location dest) {
-		super(EventTypes.ROUTE_ADDED);
+		super(bookingId, EventTypes.ROUTE_ADDED);
 		this.setBookingId(bookingId);
 		this.cargoId = cargoId;
 		this.routeId = routeId;

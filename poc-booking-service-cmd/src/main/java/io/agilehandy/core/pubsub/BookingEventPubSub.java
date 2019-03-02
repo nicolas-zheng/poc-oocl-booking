@@ -18,14 +18,18 @@
 package io.agilehandy.core.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
+import io.agilehandy.common.api.EventTypes;
+import io.agilehandy.common.api.bookings.BookingCreatedEvent;
 import io.agilehandy.core.entities.Booking;
-import io.agilehandy.common.api.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.Serialized;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -53,10 +57,11 @@ public class BookingEventPubSub {
 		this.channels = channels;
 	}
 
-	public void publish(BaseEvent event) {
-		Message<BaseEvent> message = MessageBuilder
+	public void publish(BookingBaseEvent event)
+	{
+		Message<BookingBaseEvent> message = MessageBuilder
 				.withPayload(event)
-				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getBookingId().toString().getBytes())
+				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getBookingId().getBytes())
 				.setHeader(HEADER_EVENT_TYPE, event.getType())
 				.build();
 		log.info("start publishing create booking event..");
@@ -66,17 +71,29 @@ public class BookingEventPubSub {
 
 	// Kafka KTable of aggregates snapshot
 	@StreamListener(BookingEventChannels.BOOKING_EVENTS_IN)
-	public void snapshot(KStream<String, BaseEvent> events) {
-		Serde<BaseEvent> pikeEventSerde = new JsonSerde<>( BaseEvent.class, new ObjectMapper() );
-		Serde<Booking> pikeSerde = new JsonSerde<>( Booking.class, new ObjectMapper() );
+	public void snapshot(KStream<String, BookingEvent> events)
+	{
+		Serde<BookingEvent> eventSerde = new JsonSerde<>( BookingEvent.class, new ObjectMapper() );
+		Serde<Booking> BookingSerde = new JsonSerde<>( Booking.class, new ObjectMapper() );
 
 		events
-				.groupByKey()
-				.aggregate(Booking::new, (key, event, booking) -> ((Booking) booking).handleEvent(event),
-						Materialized.<String, Booking, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)
-								.withKeySerde(Serdes.String())
-								.withValueSerde(pikeSerde)
+				.groupBy( (s, event) ->
+						event.getBookingId()
+						, Serialized.with(Serdes.String(), eventSerde) )
+				//.groupByKey()
+				.aggregate(Booking::new,
+						(key, event, booking) -> booking.handleEvent(event),
+									Materialized.<String, Booking, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)
+									.withKeySerde(Serdes.String())
+									.withValueSerde(BookingSerde)
 				);
+	}
+
+	public JsonSerde getEventSerde(BookingEvent event) {
+		if (event.getType().equals(EventTypes.BOOKING_CREATED)) {
+			return new JsonSerde<>( BookingCreatedEvent.class, new ObjectMapper() );
+		}
+		return new JsonSerde<>( BookingEvent.class, new ObjectMapper() );
 	}
 
 }

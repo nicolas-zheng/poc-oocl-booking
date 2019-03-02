@@ -23,13 +23,14 @@ spring:
           binder:
             configuration:
               commit.interval.ms: 1000
+              serdeError: logAndContinue
               default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
               default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
         binder:
           brokers: localhost:9092
           headers: event_type,kafka_messageKey
-  jackson:
-    serialization:
-      write_dates_as_timestamps: false
+#  jackson:
+#    serialization:
+#      write_dates_as_timestamps: false
 
 

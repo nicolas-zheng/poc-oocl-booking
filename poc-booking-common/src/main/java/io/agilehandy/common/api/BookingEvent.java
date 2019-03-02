@@ -17,14 +17,8 @@
 
 package io.agilehandy.common.api;
 
-import java.time.LocalDateTime;
-
-public interface BaseEvent {
-
-	public String getBookingId();
+public interface BookingEvent {
 
 	public String getType();
-
-	public LocalDateTime getOccurredOn();
-
+	public String getBookingId();
 }

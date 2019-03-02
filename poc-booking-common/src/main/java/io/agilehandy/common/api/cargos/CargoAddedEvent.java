@@ -17,30 +17,34 @@
 
 package io.agilehandy.common.api.cargos;
 
-import io.agilehandy.common.api.BaseEvent;
+import io.agilehandy.common.api.BookingBaseEvent;
+import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
-import io.agilehandy.common.api.ParentEvent;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class CargoAddedEvent extends ParentEvent implements BaseEvent {
 
-	String cargoId;
+@Data
+@NoArgsConstructor
+public class CargoAddedEvent extends BookingBaseEvent implements BookingEvent {
 
-	CargoNature nature;
-	ContainerSize requiredSize;
+	private String cargoId;
+
+	private CargoNature nature;
+	private ContainerSize requiredSize;
 
 	public CargoAddedEvent(String bookingId, String cargoId, CargoNature nature
 			, ContainerSize requiredSize) {
-		super(EventTypes.CARGO_ADDED);
+		super(bookingId, EventTypes.CARGO_ADDED);
 		this.setBookingId(bookingId);
 		this.cargoId = cargoId;
 		this.nature = nature;
 		this.requiredSize = requiredSize;
 	}
+
 }
