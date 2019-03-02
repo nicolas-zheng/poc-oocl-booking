@@ -23,21 +23,19 @@ import io.agilehandy.common.api.ParentEvent;
 import io.agilehandy.common.api.model.Location;
 import lombok.Value;
 
-import java.util.UUID;
-
 /**
  * @author Haytham Mohamed
  **/
 @Value
 public class RouteAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID cargoId;
-	UUID routeId;
+	String cargoId;
+	String routeId;
 
 	Location origin;
 	Location destination;
 
-	public RouteAddedEvent(UUID bookingId, UUID cargoId, UUID routeId, Location origin, Location dest) {
+	public RouteAddedEvent(String bookingId, String cargoId, String routeId, Location origin, Location dest) {
 		super(EventTypes.ROUTE_ADDED);
 		this.setBookingId(bookingId);
 		this.cargoId = cargoId;

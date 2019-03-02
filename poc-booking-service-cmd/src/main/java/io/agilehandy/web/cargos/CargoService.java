@@ -48,11 +48,11 @@ public class CargoService {
 	}
 
 	public List<Cargo> getCargos(String bookingId) {
-		return CommonService.getBookingById(repository, UUID.fromString(bookingId)).getCargoList();
+		return CommonService.getBookingById(repository, bookingId).getCargoList();
 	}
 
 	public Cargo getCargo(String bookingId, String cargoId) {
-		Booking booking = CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getCargo(UUID.fromString(cargoId));
 	}
 }

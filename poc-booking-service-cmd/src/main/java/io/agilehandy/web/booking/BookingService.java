@@ -36,10 +36,6 @@ public class BookingService {
 		this.repository = repository;
 	}
 
-	public BookingService() {
-		this.repository = null;
-	}
-
 	public String createBooking(BookingCreateCommand cmd) {
 		Booking booking = new Booking(cmd);
 		repository.save(booking);
@@ -47,7 +43,7 @@ public class BookingService {
 	}
 
 	public Booking getBookingById(String bookingId) {
-		return CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		return CommonService.getBookingById(repository, UUID.fromString(bookingId).toString());
 	}
 
 }

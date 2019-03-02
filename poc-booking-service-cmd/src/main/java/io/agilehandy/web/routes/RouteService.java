@@ -48,12 +48,12 @@ public class RouteService {
 	}
 
 	public List<Route> getRoutes(String bookingId, String cargoId) {
-		Booking booking = CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getCargo(UUID.fromString(cargoId)).getRouteList();
 	}
 
 	public Route getRoute(String bookingId, String cargoId, String routeId) {
-		Booking booking = CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getRoute(UUID.fromString(cargoId), UUID.fromString(routeId));
 	}
 

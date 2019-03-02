@@ -24,23 +24,21 @@ import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.model.TransportationType;
 import lombok.Value;
 
-import java.util.UUID;
-
 /**
  * @author Haytham Mohamed
  **/
 @Value
 public class LegAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID cargoId;
-	UUID routeId;
-	UUID legId;
+	String cargoId;
+	String routeId;
+	String legId;
 
 	Location startLocation;
 	Location endLocation;
 	TransportationType transType;
 
-	public LegAddedEvent(UUID bookingId, UUID cargoId, UUID routeId, UUID legId,
+	public LegAddedEvent(String bookingId, String cargoId, String routeId, String legId,
 	                     Location start, Location end, TransportationType type) {
 		super(EventTypes.LEG_ADDED);
 		this.setBookingId(bookingId);

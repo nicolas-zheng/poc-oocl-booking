@@ -50,14 +50,14 @@ public class Cargo {
 
 	public void cargoAdded(CargoAddedEvent event) {
 		routeList = new ArrayList<>();
-		this.id = event.getCargoId();
-		this.bookingId = event.getBookingId();
+		this.id = UUID.fromString(event.getCargoId());
+		this.bookingId = UUID.fromString(event.getBookingId());
 		this.nature = event.getNature();
 		this.requiredSize = event.getRequiredSize();
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		Route route = routeMember(event.getRouteId());
+		Route route = routeMember(UUID.fromString(event.getRouteId()));
 		route.routeAdded(event);
 		routeList.add(route);
 	}

@@ -21,14 +21,12 @@ import io.agilehandy.common.api.exceptions.BookingNotFoundException;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.web.booking.BookingRepository;
 
-import java.util.UUID;
-
 /**
  * @author Haytham Mohamed
  **/
 public class CommonService {
 
-	public static Booking getBookingById(BookingRepository repository, UUID bookingId) {
+	public static Booking getBookingById(BookingRepository repository, String bookingId) {
 		Booking booking = repository.findById(bookingId.toString());
 		if (booking == null) {
 			throw new BookingNotFoundException(

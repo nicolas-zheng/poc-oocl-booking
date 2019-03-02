@@ -48,12 +48,12 @@ public class LegService {
 	}
 
 	public List<Leg> getLegs(String bookingId, String cargoId, String routeId) {
-		Booking booking = CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getRoute(UUID.fromString(cargoId), UUID.fromString(routeId)).getLegList();
 	}
 
 	public Leg getLeg(String bookingId, String cargoId, String routeId, String legId) {
-		Booking booking = CommonService.getBookingById(repository, UUID.fromString(bookingId));
+		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getLeg(UUID.fromString(cargoId), UUID.fromString(routeId)
 				, UUID.fromString(legId));
 	}

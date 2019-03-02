@@ -24,20 +24,18 @@ import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
 import lombok.Value;
 
-import java.util.UUID;
-
 /**
  * @author Haytham Mohamed
  **/
 @Value
 public class CargoAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID cargoId;
+	String cargoId;
 
 	CargoNature nature;
 	ContainerSize requiredSize;
 
-	public CargoAddedEvent(UUID bookingId, UUID cargoId, CargoNature nature
+	public CargoAddedEvent(String bookingId, String cargoId, CargoNature nature
 			, ContainerSize requiredSize) {
 		super(EventTypes.CARGO_ADDED);
 		this.setBookingId(bookingId);

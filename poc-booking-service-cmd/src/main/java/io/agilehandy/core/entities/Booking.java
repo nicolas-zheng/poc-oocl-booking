@@ -36,7 +36,7 @@ import javaslang.Predicates;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,7 +60,7 @@ public class Booking {
 	UUID customerId;
 	Location origin;
 	Location destination;
-	LocalDateTime cutOffDate;
+	LocalDate cutOffDate;
 
 	List<Cargo> cargoList;
 
@@ -69,7 +69,7 @@ public class Booking {
 	public Booking(BookingCreateCommand cmd) {
 		// TODO: perform any business validation here
 		BookingCreatedEvent event =
-				new BookingCreatedEvent(UUID.randomUUID(),
+				new BookingCreatedEvent(UUID.randomUUID().toString(),
 						cmd.getCustomerId(),
 						cmd.getOrigin(),
 						cmd.getDestination(),
@@ -78,8 +78,8 @@ public class Booking {
 	}
 
 	public Booking bookingCreated(BookingCreatedEvent event) {
-		this.id = event.getBookingId();
-		this.customerId = event.getCustomerId();
+		this.id = UUID.fromString(event.getBookingId());
+		this.customerId = UUID.fromString(event.getCustomerId());
 		this.cutOffDate = event.getCutOffDate();
 		this.origin = event.getOrigin();
 		this.destination = event.getDestination();
@@ -91,14 +91,15 @@ public class Booking {
 	public UUID addCargo(CargoAddCommand cmd) {
 		UUID cargoId = UUID.randomUUID();
 		CargoAddedEvent event =
-			new CargoAddedEvent(cmd.getBookingId(), cargoId,cmd.getNature(), cmd.getRequiredSize());
+			new CargoAddedEvent(cmd.getBookingId(), cargoId.toString()
+					,cmd.getNature(), cmd.getRequiredSize());
 
 		this.cargoAdded(event);
 		return cargoId;
 	}
 
 	public Booking cargoAdded(CargoAddedEvent event) {
-		Cargo cargo = cargoMember(event.getCargoId());
+		Cargo cargo = cargoMember(UUID.fromString(event.getCargoId()));
 		cargo.cargoAdded(event);
 		this.cargoList.add(cargo);
 		cacheEvent(event);
@@ -108,14 +109,14 @@ public class Booking {
 	public UUID addRoute(RouteAddCommand cmd) {
 		UUID routeId = UUID.randomUUID();
 		RouteAddedEvent event =
-			new RouteAddedEvent(this.getId(), cmd.getCargoId(), routeId, cmd.getOrigin()
-					, cmd.getDestination());
+			new RouteAddedEvent(this.getId().toString(), cmd.getCargoId()
+					, routeId.toString(), cmd.getOrigin(), cmd.getDestination());
 		this.routeAdded(event);
 		return routeId;
 	}
 
 	public Booking routeAdded(RouteAddedEvent event) {
-		cargoMember(event.getCargoId()).routeAdded(event);
+		cargoMember(UUID.fromString(event.getCargoId())).routeAdded(event);
 		cacheEvent(event);
 		return this;
 	}
@@ -124,14 +125,16 @@ public class Booking {
 		UUID legId = UUID.randomUUID();
 		LegAddedEvent event =
 				new LegAddedEvent(cmd.getBookingId(), cmd.getCargoId(), cmd.getRouteId(),
-						legId, cmd.getStartLocation(),
+						legId.toString(), cmd.getStartLocation(),
 						cmd.getEndLocation(), cmd.getTransType());
 		this.legAdded(event);
 		return legId;
 	}
 
 	public Booking legAdded(LegAddedEvent event) {
-		cargoMember(event.getCargoId()).routeMember(event.getRouteId()).legAdded(event);
+		cargoMember(UUID.fromString(event.getCargoId()))
+						.routeMember(UUID.fromString(event.getRouteId()))
+						.legAdded(event);
 		cacheEvent(event);
 		return this;
 	}

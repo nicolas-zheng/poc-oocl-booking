@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 /**
  * @author Haytham Mohamed
  **/
@@ -39,6 +41,8 @@ public class BookingController {
 
 	@PostMapping
 	public String createBooking(@RequestBody BookingCreateCommand cmd) {
+		// temporary assign a random customer id
+		cmd.setCustomerId(UUID.randomUUID().toString());
 		return service.createBooking(cmd);
 	}
 

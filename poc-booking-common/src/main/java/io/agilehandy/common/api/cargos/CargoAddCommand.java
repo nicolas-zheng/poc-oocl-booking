@@ -24,7 +24,6 @@ import io.agilehandy.common.api.model.ContainerSize;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
@@ -32,7 +31,7 @@ import java.util.UUID;
 @Data
 public class CargoAddCommand extends ParentCommand implements BaseCommand, Serializable {
 
-	UUID bookingId;
+	String bookingId;
 
 	CargoNature nature;
 	ContainerSize requiredSize;
@@ -52,7 +51,7 @@ public class CargoAddCommand extends ParentCommand implements BaseCommand, Seria
 			return commandBuilt;
 		}
 
-		public Builder setBookingId(UUID bookingId) {
+		public Builder setBookingId(String bookingId) {
 			commandToBuild.setBookingId(bookingId);
 			return this;
 		}

@@ -45,13 +45,13 @@ public class Route {
 
 	public void routeAdded(RouteAddedEvent event) {
 		legList = new ArrayList<>();
-		this.id = event.getRouteId();
-		this.bookingId = event.getBookingId();
-		this.cargoId = event.getCargoId();
+		this.id = UUID.fromString(event.getRouteId());
+		this.bookingId = UUID.fromString(event.getBookingId());
+		this.cargoId = UUID.fromString(event.getCargoId());
 	}
 
 	public void legAdded(LegAddedEvent event) {
-		Leg leg = legMember(event.getLegId());
+		Leg leg = legMember(UUID.fromString(event.getLegId()));
 		leg.legAdded(event);
 		this.legList.add(leg);
 	}

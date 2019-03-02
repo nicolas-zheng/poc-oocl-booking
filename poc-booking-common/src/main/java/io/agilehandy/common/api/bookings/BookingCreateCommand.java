@@ -17,14 +17,19 @@
 
 package io.agilehandy.common.api.bookings;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import io.agilehandy.common.api.BaseCommand;
 import io.agilehandy.common.api.ParentCommand;
 import io.agilehandy.common.api.model.Location;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
 /**
  * @author Haytham Mohamed
@@ -32,10 +37,15 @@ import java.util.UUID;
 @Data
 public class BookingCreateCommand extends ParentCommand implements BaseCommand, Serializable {
 
-	UUID customerId;
+	String customerId;
 	Location origin;
 	Location destination;
-	LocalDateTime cutOffDate;
+
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	LocalDate cutOffDate;
 
 	@Data
 	public static class Builder {
@@ -52,7 +62,7 @@ public class BookingCreateCommand extends ParentCommand implements BaseCommand, 
 			return commandBuilt;
 		}
 
-		public Builder setCustomerId(UUID customerId) {
+		public Builder setCustomerId(String customerId) {
 			commandToBuild.setCustomerId(customerId);
 			return this;
 		}
@@ -67,7 +77,7 @@ public class BookingCreateCommand extends ParentCommand implements BaseCommand, 
 			return this;
 		}
 
-		public Builder setCutOffDate(LocalDateTime cutoffDate) {
+		public Builder setCutOffDate(LocalDate cutoffDate) {
 			commandToBuild.setCutOffDate(cutoffDate);
 			return this;
 		}

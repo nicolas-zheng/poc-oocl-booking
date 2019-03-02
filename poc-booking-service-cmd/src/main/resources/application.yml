@@ -28,5 +28,8 @@ spring:
         binder:
           brokers: localhost:9092
           headers: event_type,kafka_messageKey
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
 
 

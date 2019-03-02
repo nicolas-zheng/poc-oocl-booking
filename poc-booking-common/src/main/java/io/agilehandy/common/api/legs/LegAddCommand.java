@@ -24,7 +24,6 @@ import io.agilehandy.common.api.model.TransportationType;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
@@ -32,9 +31,9 @@ import java.util.UUID;
 @Data
 public class LegAddCommand extends ParentCommand implements BaseCommand, Serializable {
 
-	UUID bookingId;
-	UUID cargoId;
-	UUID routeId;
+	String bookingId;
+	String cargoId;
+	String routeId;
 
 	Location startLocation;
 	Location endLocation;
@@ -55,17 +54,17 @@ public class LegAddCommand extends ParentCommand implements BaseCommand, Seriali
 			return commandBuilt;
 		}
 
-		public Builder setBookingId(UUID bookingId) {
+		public Builder setBookingId(String bookingId) {
 			commandToBuild.setBookingId(bookingId);
 			return this;
 		}
 
-		public Builder setCargoId(UUID cargoId) {
+		public Builder setCargoId(String cargoId) {
 			commandToBuild.setCargoId(cargoId);
 			return this;
 		}
 
-		public Builder setRouteId(UUID routeId) {
+		public Builder setRouteId(String routeId) {
 			commandToBuild.setRouteId(routeId);
 			return this;
 		}
