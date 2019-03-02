@@ -1,4 +1,4 @@
-package io.agilehandy.booking;
+package io.agilehandy.web.booking;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -15,34 +15,25 @@
  */
 
 
-package io.agilehandy.booking.web;
+package io.agilehandy.web;
 
-import io.agilehandy.booking.entities.Booking;
-import io.agilehandy.common.api.bookings.BookingCreateCommand;
-import io.agilehandy.common.api.cargos.CargoAddCommand;
-import org.springframework.stereotype.Service;
+import io.agilehandy.common.api.exceptions.BookingNotFoundException;
+import io.agilehandy.core.entities.Booking;
+import io.agilehandy.web.booking.BookingRepository;
 
 import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
-@Service
-public class BookingService {
+public class CommonService {
 
-	private final BookingRepository repository;
-
-	public BookingService(BookingRepository repository) {
-		this.repository = repository;
-	}
-
-	public UUID createBooking(BookingCreateCommand cmd) {
-		Booking booking = new Booking(cmd);
-		repository.save(booking);
-		return booking.getId();
-	}
-
-	public void createCargos(CargoAddCommand cmd) {
-		//Cargo cargo = new Cargo(entities);
+	public static Booking getBookingById(BookingRepository repository, UUID bookingId) {
+		Booking booking = repository.findById(bookingId.toString());
+		if (booking == null) {
+			throw new BookingNotFoundException(
+					String.format("Booking with id %is is not found", bookingId));
+		}
+		return  booking;
 	}
 }

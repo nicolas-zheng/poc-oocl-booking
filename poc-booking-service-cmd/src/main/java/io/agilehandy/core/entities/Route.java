@@ -15,11 +15,9 @@
  */
 
 
-package io.agilehandy.booking.entities;
+package io.agilehandy.core.entities;
 
-import io.agilehandy.common.api.cargos.CargoAddedEvent;
-import io.agilehandy.common.api.model.CargoNature;
-import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,42 +31,38 @@ import java.util.UUID;
  **/
 @Data
 @NoArgsConstructor
-public class Cargo {
+public class Route {
 
 	UUID id;
 	UUID bookingId;
+	UUID cargoId;
 
-	CargoNature nature;
-	ContainerSize requiredSize;
-	ContainerSize assignedSize;
+	List<Leg> legList;
 
-	List<Route> routeList;
-
-	public Cargo(UUID cargoId) {
-		this.id = cargoId;
-	}
-
-	public void cargoAdded(CargoAddedEvent event) {
-		routeList = new ArrayList<>();
-		this.id = event.getCargoId();
-		this.bookingId = event.getBookingId();
-		this.nature = event.getNature();
-		this.requiredSize = event.getRequiredSize();
+	public Route(UUID routeId) {
+		this.id = routeId;
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		Route route = routeMember(event.getRouteId());
-		route.routeAdded(event);
-		routeList.add(route);
+		legList = new ArrayList<>();
+		this.id = event.getRouteId();
+		this.bookingId = event.getBookingId();
+		this.cargoId = event.getCargoId();
 	}
 
-	public Route routeMember(UUID routeId) {
-		Route route = routeList.stream()
-				.filter(r -> r.getId() == routeId)
+	public void legAdded(LegAddedEvent event) {
+		Leg leg = legMember(event.getLegId());
+		leg.legAdded(event);
+		this.legList.add(leg);
+	}
+
+	public Leg legMember(UUID legId) {
+		Leg leg = legList.stream()
+				.filter(l -> l.getId() == id)
 				.findFirst()
-				.orElse(new Route(routeId));
-		this.routeList.add(route);
-		return route;
+				.orElse(new Leg(legId));
+		this.legList.add(leg);
+		return leg;
 	}
 
 }

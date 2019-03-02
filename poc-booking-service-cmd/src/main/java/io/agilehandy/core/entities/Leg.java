@@ -15,15 +15,15 @@
  */
 
 
-package io.agilehandy.booking.entities;
+package io.agilehandy.core.entities;
 
 import io.agilehandy.common.api.legs.LegAddedEvent;
-import io.agilehandy.common.api.routes.RouteAddedEvent;
+import io.agilehandy.common.api.model.Location;
+import io.agilehandy.common.api.model.TransportationType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -31,38 +31,31 @@ import java.util.UUID;
  **/
 @Data
 @NoArgsConstructor
-public class Route {
+public class Leg {
 
 	UUID id;
 	UUID bookingId;
 	UUID cargoId;
+	UUID routeId;
 
-	List<Leg> legList;
+	Location startLocation;
+	Location endLocation;
+	TransportationType transType;
+	LocalDateTime pickupTime;
+	LocalDateTime dropOffTime;
 
-	public Route(UUID routeId) {
-		this.id = routeId;
-	}
-
-	public void routeAdded(RouteAddedEvent event) {
-		legList = new ArrayList<>();
-		this.id = event.getRouteId();
-		this.bookingId = event.getBookingId();
-		this.cargoId = event.getCargoId();
+	public Leg(UUID legId) {
+		this.id = legId;
 	}
 
 	public void legAdded(LegAddedEvent event) {
-		Leg leg = legMember(event.getLegId());
-		leg.legAdded(event);
-		this.legList.add(leg);
-	}
-
-	public Leg legMember(UUID legId) {
-		Leg leg = legList.stream()
-				.filter(l -> l.getId() == id)
-				.findFirst()
-				.orElse(new Leg(legId));
-		this.legList.add(leg);
-		return leg;
+		this.id = event.getLegId();
+		this.bookingId = event.getBookingId();
+		this.cargoId = event.getCargoId();
+		this.routeId = event.getRouteId();
+		this.startLocation = event.getStartLocation();
+		this.endLocation = event.getEndLocation();
+		this.transType = event.getTransType();
 	}
 
 }

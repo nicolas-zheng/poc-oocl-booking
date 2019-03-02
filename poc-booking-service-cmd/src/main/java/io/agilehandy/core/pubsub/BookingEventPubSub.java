@@ -15,10 +15,10 @@
  */
 
 
-package io.agilehandy.booking.pubsub;
+package io.agilehandy.core.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.agilehandy.booking.entities.Booking;
+import io.agilehandy.core.entities.Booking;
 import io.agilehandy.common.api.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
@@ -59,20 +59,18 @@ public class BookingEventPubSub {
 				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getBookingId().toString().getBytes())
 				.setHeader(HEADER_EVENT_TYPE, event.getType())
 				.build();
-		log.info("start publishing create pike event..");
+		log.info("start publishing create booking event..");
 		channels.output().send(message);
-		log.info("finish publishing create pike event..");
+		log.info("finish publishing create booking event..");
 	}
 
-	// Kafka KTable of aggregate snapshot
+	// Kafka KTable of aggregates snapshot
 	@StreamListener(BookingEventChannels.BOOKING_EVENTS_IN)
 	public void snapshot(KStream<String, BaseEvent> events) {
 		Serde<BaseEvent> pikeEventSerde = new JsonSerde<>( BaseEvent.class, new ObjectMapper() );
 		Serde<Booking> pikeSerde = new JsonSerde<>( Booking.class, new ObjectMapper() );
 
 		events
-				//.groupBy( (s, event) -> event.getEventSubject(),
-				//Serialized.with(Serdes.String(), pikeEventSerde) )
 				.groupByKey()
 				.aggregate(Booking::new, (key, event, booking) -> ((Booking) booking).handleEvent(event),
 						Materialized.<String, Booking, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)

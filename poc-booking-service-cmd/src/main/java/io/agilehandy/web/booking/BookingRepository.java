@@ -15,10 +15,10 @@
  */
 
 
-package io.agilehandy.booking.web;
+package io.agilehandy.web.booking;
 
-import io.agilehandy.booking.entities.Booking;
-import io.agilehandy.booking.pubsub.BookingEventPubSub;
+import io.agilehandy.core.entities.Booking;
+import io.agilehandy.core.pubsub.BookingEventPubSub;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
@@ -37,14 +37,15 @@ public class BookingRepository {
 	private final BookingEventPubSub pubsub;
 	private final QueryableStoreRegistry queryableStoreRegistry;
 
-	public BookingRepository(BookingEventPubSub pubsub, QueryableStoreRegistry queryableStoreRegistry) {
+	public BookingRepository(BookingEventPubSub pubsub
+			, QueryableStoreRegistry queryableStoreRegistry) {
 		this.pubsub = pubsub;
 		this.queryableStoreRegistry = queryableStoreRegistry;
 	}
 
-	public void save(Booking book) {
-		book.getCache().stream().forEach(e -> pubsub.publish(e));
-		book.clearEventCache();
+	public void save(Booking booking) {
+		booking.getCache().stream().forEach(e -> pubsub.publish(e));
+		booking.clearEventCache();
 	}
 
 	public Booking findById(String id) {

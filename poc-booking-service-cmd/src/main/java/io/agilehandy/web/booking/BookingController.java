@@ -15,10 +15,14 @@
  */
 
 
-package io.agilehandy.booking.web;
+package io.agilehandy.web.booking;
 
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
+import io.agilehandy.core.entities.Booking;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,8 +31,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BookingController {
 
+	private final BookingService service;
+
+	public BookingController(BookingService service) {
+		this.service = service;
+	}
+
 	@PostMapping
-	public String createBooking(BookingCreateCommand cmd) {
-		return null;
+	public String createBooking(@RequestBody BookingCreateCommand cmd) {
+		return service.createBooking(cmd);
+	}
+
+	@GetMapping("/{id}")
+	public Booking getBooking(@PathVariable String id) {
+		return service.getBookingById(id);
 	}
 }

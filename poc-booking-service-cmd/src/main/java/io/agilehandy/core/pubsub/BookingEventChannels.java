@@ -15,7 +15,7 @@
  */
 
 
-package io.agilehandy.booking.pubsub;
+package io.agilehandy.core.pubsub;
 
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.cloud.stream.annotation.Input;

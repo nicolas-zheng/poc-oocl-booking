@@ -15,7 +15,7 @@
  */
 
 
-package io.agilehandy.booking.entities;
+package io.agilehandy.core.entities;
 
 import io.agilehandy.common.api.BaseEvent;
 import io.agilehandy.common.api.EventTypes;
@@ -88,12 +88,13 @@ public class Booking {
 		return this;
 	}
 
-	public void addCargo(CargoAddCommand cmd) {
+	public UUID addCargo(CargoAddCommand cmd) {
+		UUID cargoId = UUID.randomUUID();
 		CargoAddedEvent event =
-				new CargoAddedEvent(cmd.getBookingId(), UUID.randomUUID()
-						,cmd.getNature(), cmd.getRequiredSize());
+			new CargoAddedEvent(cmd.getBookingId(), cargoId,cmd.getNature(), cmd.getRequiredSize());
 
 		this.cargoAdded(event);
+		return cargoId;
 	}
 
 	public Booking cargoAdded(CargoAddedEvent event) {
@@ -104,11 +105,13 @@ public class Booking {
 		return this;
 	}
 
-	public void addRoute(RouteAddCommand cmd) {
+	public UUID addRoute(RouteAddCommand cmd) {
+		UUID routeId = UUID.randomUUID();
 		RouteAddedEvent event =
-				new RouteAddedEvent(this.getId(), cmd.getCargoId(), UUID.randomUUID()
-						, cmd.getOrigin(), cmd.getDestination());
+			new RouteAddedEvent(this.getId(), cmd.getCargoId(), routeId, cmd.getOrigin()
+					, cmd.getDestination());
 		this.routeAdded(event);
+		return routeId;
 	}
 
 	public Booking routeAdded(RouteAddedEvent event) {
@@ -117,12 +120,14 @@ public class Booking {
 		return this;
 	}
 
-	public void addLeg(LegAddCommand cmd) {
+	public UUID addLeg(LegAddCommand cmd) {
+		UUID legId = UUID.randomUUID();
 		LegAddedEvent event =
 				new LegAddedEvent(cmd.getBookingId(), cmd.getCargoId(), cmd.getRouteId(),
-						UUID.randomUUID(), cmd.getStartLocation(),
+						legId, cmd.getStartLocation(),
 						cmd.getEndLocation(), cmd.getTransType());
 		this.legAdded(event);
+		return legId;
 	}
 
 	public Booking legAdded(LegAddedEvent event) {
