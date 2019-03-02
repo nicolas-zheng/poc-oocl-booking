@@ -13,6 +13,7 @@
 	<groupId>io.agilehandy</groupId>
 	<artifactId>poc-oocl-booking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<name>poc-oocl-booking</name>
 	<description>Demo project for OOCL booking service using Spring Boot</description>
@@ -72,5 +73,11 @@
 			<url>https://repo.spring.io/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<modules>
+		<module>poc-booking-common</module>
+		<module>poc-booking-service-cmd</module>
+		<module>poc-booking-service-qry</module>
+	</modules>
 
 </project>

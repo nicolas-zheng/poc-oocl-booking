@@ -15,10 +15,21 @@
  */
 
 
-package io.agilehandy.cargos;
+package io.agilehandy.booking.pubsub;
 
-/**
- * @author Haytham Mohamed
- **/
-public class cargoController {
+import org.apache.kafka.streams.kstream.KStream;
+import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.messaging.MessageChannel;
+
+public interface BookingEventChannels {
+
+	String BOOKING_EVENTS_IN = "input";
+	String BOOKING_EVENTS_OUT = "output";
+
+	@Output(BOOKING_EVENTS_OUT)
+	MessageChannel output();
+
+	@Input(BOOKING_EVENTS_IN)
+	KStream<?, ?> input();
 }
