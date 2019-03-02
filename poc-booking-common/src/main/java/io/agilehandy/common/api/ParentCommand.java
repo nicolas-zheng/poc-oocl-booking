@@ -22,7 +22,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
@@ -30,14 +29,9 @@ import java.util.UUID;
 @Data
 public class ParentCommand implements Serializable, BaseCommand {
 
-	private UUID subjectId;
 	private LocalDateTime occurredOn;
-	private String Type;
 
-	public ParentCommand() {}
-
-	public ParentCommand(UUID id) {
-		this.subjectId = subjectId;
+	public ParentCommand() {
 		this.occurredOn = LocalDateTime.now();
 	}
 }

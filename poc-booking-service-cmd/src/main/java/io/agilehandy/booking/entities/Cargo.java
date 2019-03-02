@@ -20,9 +20,12 @@ package io.agilehandy.booking.entities;
 import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -39,15 +42,33 @@ public class Cargo {
 	ContainerSize requiredSize;
 	ContainerSize assignedSize;
 
-	public Cargo(UUID bookingId, UUID cargoId) {
+	List<Route> routeList;
+
+	public Cargo(UUID cargoId) {
 		this.id = cargoId;
-		this.bookingId = bookingId;
 	}
 
 	public void cargoAdded(CargoAddedEvent event) {
-		this.id = event.getSubjectId();
+		routeList = new ArrayList<>();
+		this.id = event.getCargoId();
+		this.bookingId = event.getBookingId();
 		this.nature = event.getNature();
 		this.requiredSize = event.getRequiredSize();
+	}
+
+	public void routeAdded(RouteAddedEvent event) {
+		Route route = routeMember(event.getRouteId());
+		route.routeAdded(event);
+		routeList.add(route);
+	}
+
+	public Route routeMember(UUID routeId) {
+		Route route = routeList.stream()
+				.filter(r -> r.getId() == routeId)
+				.findFirst()
+				.orElse(new Route(routeId));
+		this.routeList.add(route);
+		return route;
 	}
 
 }

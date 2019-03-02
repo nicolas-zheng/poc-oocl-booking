@@ -17,10 +17,13 @@
 
 package io.agilehandy.booking.entities;
 
+import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,16 +37,32 @@ public class Route {
 	UUID bookingId;
 	UUID cargoId;
 
-	public Route(UUID bookingId, UUID cargoId, UUID routeId) {
-		this.bookingId = bookingId;
-		this.cargoId = cargoId;
+	List<Leg> legList;
+
+	public Route(UUID routeId) {
 		this.id = routeId;
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		this.id = event.getSubjectId();
-		this.bookingId = event.getSubjectId();
+		legList = new ArrayList<>();
+		this.id = event.getRouteId();
+		this.bookingId = event.getBookingId();
 		this.cargoId = event.getCargoId();
+	}
+
+	public void legAdded(LegAddedEvent event) {
+		Leg leg = legMember(event.getLegId());
+		leg.legAdded(event);
+		this.legList.add(leg);
+	}
+
+	public Leg legMember(UUID legId) {
+		Leg leg = legList.stream()
+				.filter(l -> l.getId() == id)
+				.findFirst()
+				.orElse(new Leg(legId));
+		this.legList.add(leg);
+		return leg;
 	}
 
 }

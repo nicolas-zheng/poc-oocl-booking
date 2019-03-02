@@ -44,15 +44,15 @@ public class Leg {
 	LocalDateTime pickupTime;
 	LocalDateTime dropOffTime;
 
-	public Leg(UUID bookingId, UUID cargoId, UUID routeId, UUID legId) {
-		this.bookingId = bookingId;
-		this.cargoId = cargoId;
+	public Leg(UUID legId) {
 		this.id = legId;
-		this.routeId = routeId;
 	}
 
 	public void legAdded(LegAddedEvent event) {
-		this.id = event.getSubjectId();
+		this.id = event.getLegId();
+		this.bookingId = event.getBookingId();
+		this.cargoId = event.getCargoId();
+		this.routeId = event.getRouteId();
 		this.startLocation = event.getStartLocation();
 		this.endLocation = event.getEndLocation();
 		this.transType = event.getTransType();

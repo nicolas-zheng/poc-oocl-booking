@@ -25,15 +25,12 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
 public class ParentEvent implements Serializable, BaseEvent {
-
-	private UUID subjectId;
 
 	private String type;
 
@@ -44,8 +41,7 @@ public class ParentEvent implements Serializable, BaseEvent {
 
 	public ParentEvent() {}
 
-	public ParentEvent(UUID id, String type) {
-		this.subjectId = id;
+	public ParentEvent(String type) {
 		this.type = type;
 		this.occurredOn = LocalDateTime.now();
 	}

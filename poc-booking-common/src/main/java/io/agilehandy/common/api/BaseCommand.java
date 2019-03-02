@@ -18,13 +18,9 @@
 package io.agilehandy.common.api;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public interface BaseCommand {
 
-	public UUID getSubjectId();
-
 	public LocalDateTime getOccurredOn();
 
-	public String getType();
 }

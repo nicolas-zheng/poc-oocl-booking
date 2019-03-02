@@ -32,6 +32,7 @@ import java.util.UUID;
 @Data
 public class LegAddCommand extends ParentCommand implements BaseCommand, Serializable {
 
+	UUID bookingId;
 	UUID cargoId;
 	UUID routeId;
 

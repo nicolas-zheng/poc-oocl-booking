@@ -60,8 +60,6 @@ public class Booking {
 	LocalDateTime cutOffDate;
 
 	List<Cargo> cargoList;
-	List<Route> routeList;
-	List<Leg> legList;
 
 	public Booking() {}
 
@@ -77,55 +75,55 @@ public class Booking {
 	}
 
 	public Booking bookingCreated(BookingCreatedEvent event) {
-		this.id = event.getSubjectId();
+		this.id = event.getBookingId();
 		this.customerId = event.getCustomerId();
 		this.cutOffDate = event.getCutOffDate();
 		this.origin = event.getOrigin();
 		this.destination = event.getDestination();
 		cargoList = new ArrayList<>();
-		routeList = new ArrayList<>();
-		legList = new ArrayList<>();
 		this.cacheEvent(event);
 		return this;
 	}
 
 	public void addCargo(CargoAddCommand cmd) {
 		CargoAddedEvent event =
-				new CargoAddedEvent(this.getId(), UUID.randomUUID()
+				new CargoAddedEvent(cmd.getBookingId(), UUID.randomUUID()
 						,cmd.getNature(), cmd.getRequiredSize());
 
 		this.cargoAdded(event);
 	}
 
 	public Booking cargoAdded(CargoAddedEvent event) {
-		cargoMember(event.getCargoId()).cargoAdded(event);
+		Cargo cargo = cargoMember(event.getCargoId());
+		cargo.cargoAdded(event);
+		this.cargoList.add(cargo);
 		cacheEvent(event);
 		return this;
 	}
 
 	public void addRoute(RouteAddCommand cmd) {
 		RouteAddedEvent event =
-				new RouteAddedEvent(this.getId(), UUID.randomUUID()
+				new RouteAddedEvent(this.getId(), cmd.getCargoId(), UUID.randomUUID()
 						, cmd.getOrigin(), cmd.getDestination());
 		this.routeAdded(event);
 	}
 
 	public Booking routeAdded(RouteAddedEvent event) {
-		routeMember(event.getCargoId(), UUID.randomUUID()).routeAdded(event);
+		cargoMember(event.getCargoId()).routeAdded(event);
 		cacheEvent(event);
 		return this;
 	}
 
 	public void addLeg(LegAddCommand cmd) {
 		LegAddedEvent event =
-				new LegAddedEvent(cmd.getSubjectId(), cmd.getCargoId(), cmd.getRouteId(),
+				new LegAddedEvent(cmd.getBookingId(), cmd.getCargoId(), cmd.getRouteId(),
 						UUID.randomUUID(), cmd.getStartLocation(),
 						cmd.getEndLocation(), cmd.getTransportationType());
 		this.legAdded(event);
 	}
 
 	public Booking legAdded(LegAddedEvent event) {
-		legMember(event.getCargoId(), event.getRouteId(), UUID.randomUUID()).legAdded(event);
+		cargoMember(event.getCargoId()).routeMember(event.getRouteId()).legAdded(event);
 		cacheEvent(event);
 		return this;
 	}
@@ -150,27 +148,8 @@ public class Booking {
 	public Cargo cargoMember(UUID cargoId) {
 		Cargo cargo = cargoList.stream()
 				.filter(c -> c.getId() == cargoId)
-				.findFirst().orElse(new Cargo(this.getId(), cargoId));
-		this.cargoList.add(cargo); // set parent
+				.findFirst().orElse(new Cargo(cargoId));
 		return cargo;
-	}
-
-	public Route routeMember(UUID cargoId, UUID routeId) {
-		Route route = routeList.stream()
-				.filter(r -> r.getId() == routeId)
-				.findFirst()
-				.orElse(new Route(this.getId(), cargoId, routeId));
-		this.routeList.add(route);
-		return route;
-	}
-
-	public Leg legMember(UUID cargoId, UUID routeId, UUID legId) {
-		Leg leg = legList.stream()
-				.filter(l -> l.getId() == id)
-				.findFirst()
-				.orElse(new Leg(this.getId(), cargoId, routeId, legId));
-		this.legList.add(leg);
-		return leg;
 	}
 
 }

@@ -32,7 +32,7 @@ import java.util.UUID;
 @Data
 public class CargoAddCommand extends ParentCommand implements BaseCommand, Serializable {
 
-	UUID cargoId;
+	UUID bookingId;
 
 	CargoNature nature;
 	ContainerSize requiredSize;
