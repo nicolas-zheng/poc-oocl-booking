@@ -37,4 +37,35 @@ public class CargoAddCommand extends ParentCommand implements BaseCommand, Seria
 	CargoNature nature;
 	ContainerSize requiredSize;
 
+	@Data
+	public static class Builder {
+
+		private CargoAddCommand commandToBuild;
+
+		public Builder() {
+			commandToBuild = new CargoAddCommand();
+		}
+
+		public CargoAddCommand build() {
+			CargoAddCommand commandBuilt = commandToBuild;
+			commandToBuild = new CargoAddCommand();
+			return commandBuilt;
+		}
+
+		public Builder setBookingId(UUID bookingId) {
+			commandToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setNature(CargoNature nature) {
+			commandToBuild.setNature(nature);
+			return this;
+		}
+
+		public Builder setRequiredSize(ContainerSize containerSize) {
+			commandToBuild.setRequiredSize(containerSize);
+			return this;
+		}
+	}
+
 }

@@ -56,7 +56,7 @@ public class BookingEventPubSub {
 	public void publish(BaseEvent event) {
 		Message<BaseEvent> message = MessageBuilder
 				.withPayload(event)
-				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getSubjectId().toString().getBytes())
+				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getBookingId().toString().getBytes())
 				.setHeader(HEADER_EVENT_TYPE, event.getType())
 				.build();
 		log.info("start publishing create pike event..");

@@ -38,5 +38,51 @@ public class LegAddCommand extends ParentCommand implements BaseCommand, Seriali
 
 	Location startLocation;
 	Location endLocation;
-	TransportationType transportationType;
+	TransportationType transType;
+
+	@Data
+	public static class Builder {
+
+		private LegAddCommand commandToBuild;
+
+		public Builder() {
+			commandToBuild = new LegAddCommand();
+		}
+
+		public LegAddCommand build() {
+			LegAddCommand commandBuilt = commandToBuild;
+			commandToBuild = new LegAddCommand();
+			return commandBuilt;
+		}
+
+		public Builder setBookingId(UUID bookingId) {
+			commandToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCargoId(UUID cargoId) {
+			commandToBuild.setCargoId(cargoId);
+			return this;
+		}
+
+		public Builder setRouteId(UUID routeId) {
+			commandToBuild.setRouteId(routeId);
+			return this;
+		}
+
+		public Builder setStartLocation(Location startLocation) {
+			commandToBuild.setStartLocation(startLocation);
+			return this;
+		}
+
+		public Builder setEndLocation(Location endLocation) {
+			commandToBuild.setEndLocation(endLocation);
+			return this;
+		}
+
+		public Builder setTransType(TransportationType transType) {
+			commandToBuild.setTransType(transType);
+			return this;
+		}
+	}
 }

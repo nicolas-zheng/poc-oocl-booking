@@ -32,7 +32,6 @@ import java.util.UUID;
 @Value
 public class CargoAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
 	UUID cargoId;
 
 	CargoNature nature;
@@ -41,7 +40,7 @@ public class CargoAddedEvent extends ParentEvent implements BaseEvent {
 	public CargoAddedEvent(UUID bookingId, UUID cargoId, CargoNature nature
 			, ContainerSize requiredSize) {
 		super(EventTypes.CARGO_ADDED);
-		this.bookingId = bookingId;
+		this.setBookingId(bookingId);
 		this.cargoId = cargoId;
 		this.nature = nature;
 		this.requiredSize = requiredSize;

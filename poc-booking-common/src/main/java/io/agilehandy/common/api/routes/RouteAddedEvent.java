@@ -31,7 +31,6 @@ import java.util.UUID;
 @Value
 public class RouteAddedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
 	UUID cargoId;
 	UUID routeId;
 
@@ -40,7 +39,7 @@ public class RouteAddedEvent extends ParentEvent implements BaseEvent {
 
 	public RouteAddedEvent(UUID bookingId, UUID cargoId, UUID routeId, Location origin, Location dest) {
 		super(EventTypes.ROUTE_ADDED);
-		this.bookingId = bookingId;
+		this.setBookingId(bookingId);
 		this.cargoId = cargoId;
 		this.routeId = routeId;
 		this.origin = origin;

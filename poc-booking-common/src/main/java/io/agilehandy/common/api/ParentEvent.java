@@ -25,12 +25,15 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * @author Haytham Mohamed
  **/
 @Data
 public class ParentEvent implements Serializable, BaseEvent {
+
+	UUID bookingId;
 
 	private String type;
 

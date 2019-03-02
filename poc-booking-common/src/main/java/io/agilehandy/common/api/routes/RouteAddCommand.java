@@ -37,4 +37,40 @@ public class RouteAddCommand extends ParentCommand implements BaseCommand, Seria
 	Location origin;
 	Location destination;
 
+	@Data
+	public static class Builder {
+
+		private RouteAddCommand commandToBuild;
+
+		public Builder() {
+			commandToBuild = new RouteAddCommand();
+		}
+
+		public RouteAddCommand build() {
+			RouteAddCommand commandBuilt = commandToBuild;
+			commandToBuild = new RouteAddCommand();
+			return commandBuilt;
+		}
+
+		public Builder setBookingId(UUID bookingId) {
+			commandToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCargoId(UUID cargoId) {
+			commandToBuild.setCargoId(cargoId);
+			return this;
+		}
+
+		public Builder setOrigin(Location origin) {
+			commandToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setDestination(Location destination) {
+			commandToBuild.setDestination(destination);
+			return this;
+		}
+	}
+
 }

@@ -32,20 +32,23 @@ import java.util.UUID;
 @Value
 public class BookingCreatedEvent extends ParentEvent implements BaseEvent {
 
-	UUID bookingId;
-
 	UUID customerId;
 	Location origin;
 	Location destination;
 	LocalDateTime cutOffDate;
 
+	public BookingCreatedEvent() {
+		this(null, null, null, null, null);
+	}
+
 	public BookingCreatedEvent(UUID bookingId, UUID customerId, Location origin
 			, Location dest, LocalDateTime cut) {
 		super(EventTypes.BOOKING_CREATED);
-		this.bookingId = bookingId;
+		this.setBookingId(bookingId);
 		this.customerId = customerId;
 		this.origin = origin;
 		this.destination = dest;
 		this.cutOffDate = cut;
 	}
+
 }

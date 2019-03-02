@@ -37,4 +37,40 @@ public class BookingCreateCommand extends ParentCommand implements BaseCommand, 
 	Location destination;
 	LocalDateTime cutOffDate;
 
+	@Data
+	public static class Builder {
+
+		private BookingCreateCommand commandToBuild;
+
+		public Builder() {
+			commandToBuild = new BookingCreateCommand();
+		}
+
+		public BookingCreateCommand build() {
+			BookingCreateCommand commandBuilt = commandToBuild;
+			commandToBuild = new BookingCreateCommand();
+			return commandBuilt;
+		}
+
+		public Builder setCustomerId(UUID customerId) {
+			commandToBuild.setCustomerId(customerId);
+			return this;
+		}
+
+		public Builder setOrigin(Location origin) {
+			commandToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setDestination(Location destination) {
+			commandToBuild.setDestination(destination);
+			return this;
+		}
+
+		public Builder setCutOffDate(LocalDateTime cutoffDate) {
+			commandToBuild.setCutOffDate(cutoffDate);
+			return this;
+		}
+	}
+
 }

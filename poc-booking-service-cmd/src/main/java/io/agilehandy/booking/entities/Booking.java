@@ -121,7 +121,7 @@ public class Booking {
 		LegAddedEvent event =
 				new LegAddedEvent(cmd.getBookingId(), cmd.getCargoId(), cmd.getRouteId(),
 						UUID.randomUUID(), cmd.getStartLocation(),
-						cmd.getEndLocation(), cmd.getTransportationType());
+						cmd.getEndLocation(), cmd.getTransType());
 		this.legAdded(event);
 	}
 
