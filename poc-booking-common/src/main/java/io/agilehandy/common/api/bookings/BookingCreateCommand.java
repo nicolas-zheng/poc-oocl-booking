@@ -17,17 +17,12 @@
 
 package io.agilehandy.common.api.bookings;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingCommand;
 import io.agilehandy.common.api.model.CargoRequest;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,21 +31,11 @@ import java.util.List;
  **/
 
 @Data
+@NoArgsConstructor
 public class BookingCreateCommand implements BookingCommand, Serializable {
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime occurredOn;
-
 	private String customerId;
-
 	List<CargoRequest> cargoRequests;
-
-	public BookingCreateCommand() {
-		this.occurredOn = LocalDateTime.now();
-	}
-
 
 	public static class Builder {
 

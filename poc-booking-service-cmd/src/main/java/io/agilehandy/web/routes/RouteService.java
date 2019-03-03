@@ -17,15 +17,14 @@
 
 package io.agilehandy.web.routes;
 
-import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.core.entities.Route;
 import io.agilehandy.web.CommonService;
 import io.agilehandy.web.booking.BookingRepository;
+import io.agilehandy.web.legs.LegService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,9 +35,11 @@ import java.util.UUID;
 public class RouteService {
 
 	private final BookingRepository repository;
+	private final LegService legService;
 
-	public RouteService(BookingRepository repository) {
+	public RouteService(BookingRepository repository, LegService legService) {
 		this.repository = repository;
+		this.legService = legService;
 	}
 
 	public String addRoute(RouteAddCommand cmd) {
@@ -51,10 +52,6 @@ public class RouteService {
 	public Route getRoute(String bookingId, String cargoId) {
 		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getCargo(UUID.fromString(cargoId)).getRoute();
-	}
-
-	public List<Location> getRouteForCargo(Location origin, Location destintaion) {
-		return null;
 	}
 
 }

@@ -24,10 +24,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingCommand;
 import io.agilehandy.common.api.model.Location;
+import io.agilehandy.common.api.model.RouteLeg;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Haytham Mohamed
@@ -46,6 +48,8 @@ public class RouteAddCommand implements BookingCommand, Serializable {
 
 	private Location origin;
 	private Location destination;
+
+	List<RouteLeg> legs;
 
 	public RouteAddCommand() {
 		this.occurredOn = LocalDateTime.now();
@@ -76,6 +80,11 @@ public class RouteAddCommand implements BookingCommand, Serializable {
 
 		public Builder setOrigin(Location origin) {
 			commandToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setLegs(List<RouteLeg> legs) {
+			commandToBuild.setLegs(legs);
 			return this;
 		}
 

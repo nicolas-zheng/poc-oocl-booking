@@ -19,6 +19,7 @@ package io.agilehandy.web.booking;
 
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.core.pubsub.BookingEventPubSub;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
@@ -33,6 +34,7 @@ import java.util.List;
  **/
 
 @Component
+@Slf4j
 public class BookingRepository {
 
 	private final BookingEventPubSub pubsub;
@@ -45,7 +47,11 @@ public class BookingRepository {
 	}
 
 	public void save(Booking booking) {
-		booking.getCache().stream().forEach(e -> pubsub.publish(e));
+		booking.getCache().stream().forEach(e -> {
+			log.info(String.format("publishing [bookingId: %s, eventType: %s]"
+					, e.getBookingId(), e.getType()));
+			pubsub.publish(e);
+		});
 		booking.clearEventCache();
 	}
 

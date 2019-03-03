@@ -28,6 +28,10 @@ import io.agilehandy.common.api.exceptions.LegNotFoundException;
 import io.agilehandy.common.api.exceptions.RouteNotFoundException;
 import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.common.api.legs.LegAddedEvent;
+import io.agilehandy.common.api.model.CargoRequest;
+import io.agilehandy.common.api.model.Location;
+import io.agilehandy.common.api.model.RouteLeg;
+import io.agilehandy.common.api.model.TransportationType;
 import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import javaslang.API;
@@ -35,7 +39,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import static javaslang.API.*;
@@ -71,14 +77,23 @@ public class Booking {
 				.setCustomerId(UUID.randomUUID().toString())
 				.setCargoRequests(cmd.getCargoRequests())
 				.build();
+
 		this.bookingCreated(event);
 
+		// attach requested cargos
+		this.attachCargos(cmd.getCargoRequests());
+
+		// assign routes and their legs
+		this.attachRoutes(this.getCargoList());
+	}
+
+	private void attachCargos(List<CargoRequest> requests) {
 		// create cargo command for every requested cargo by customer
-		if (cmd.getCargoRequests() != null && !cmd.getCargoRequests().isEmpty()) {
-			cmd.getCargoRequests().stream().forEach(cargoRequest -> {
+		if (requests != null && !requests.isEmpty()) {
+			requests.stream().forEach(cargoRequest -> {
 				CargoAddCommand cargoAddCommand =
 						new CargoAddCommand.Builder()
-								.setBookingId(bookingId.toString())
+								.setBookingId(this.getId().toString())
 								.setRequiredSize(cargoRequest.getRequiredSize())
 								.setNature(cargoRequest.getNature())
 								.setCutOffDate(cargoRequest.getCutOffDate())
@@ -90,6 +105,7 @@ public class Booking {
 		}
 	}
 
+	// EVENT SOURCE HANDLER
 	public Booking bookingCreated(BookingCreatedEvent event) {
 		this.setId(UUID.fromString(event.getBookingId()));
 		this.setCustomerId(UUID.fromString(event.getCustomerId()));
@@ -115,12 +131,56 @@ public class Booking {
 		return cargoId;
 	}
 
+	// EVENT SOURCE HANDLER
 	public Booking cargoAdded(CargoAddedEvent event) {
 		Cargo cargo = this.cargoMember(UUID.fromString(event.getCargoId()));
 		cargo.cargoAdded(event);
 		this.getCargoList().add(cargo);
 		this.cacheEvent(event);
 		return this;
+	}
+
+	private void attachRoutes(List<Cargo> cargos) {
+		// TODO: external service to pull the routes and their legs
+		// values are hard-coded for this demo
+		cargos.stream()
+				.map(cargo -> new RouteAddCommand.Builder()
+						.setBookingId(this.getId().toString())
+						.setCargoId(cargo.getId().toString())
+						.setOrigin(cargo.getOrigin())
+						.setDestination(cargo.getDestination())
+						.setLegs(this.findRouteLegs(cargo.getOrigin(), cargo.getDestination()))
+						.build()
+				)
+				.forEach(routeAddCommand -> this.addRoute(routeAddCommand));
+	}
+
+	public List<RouteLeg> findRouteLegs(Location origin, Location destination) {
+		// TODO: call external service to get legs for a route
+		// for this demo generate random route legs
+		int numberOfLegs = 0;
+		int min = 2;
+		int max = 4;
+		List<TransportationType> transTypes = Arrays.asList(TransportationType.TRUCK,
+				TransportationType.VESSEL);
+		List<RouteLeg> legs = new ArrayList<>();
+		do {
+			Location startLocation = new Location(
+					"zone-" + new Random().nextInt(20)
+					, "facility-" + new Random().nextInt(20));
+			Location endLocation = new Location(
+					"zone-" + new Random().nextInt(20)
+					, "facility-" + new Random().nextInt(20));
+
+			RouteLeg leg =
+					new RouteLeg(startLocation, endLocation
+							, transTypes.get(new Random().nextInt(transTypes.size())));
+			legs.add(leg);
+
+			numberOfLegs++;
+		} while (numberOfLegs > (new Random().nextInt((max - min) + 1) + min));
+
+		return legs;
 	}
 
 	public UUID addRoute(RouteAddCommand cmd) {
@@ -134,12 +194,33 @@ public class Booking {
 				.setOrigin(cmd.getOrigin())
 				.setDestination(cmd.getDestination())
 				.build();
+
 		this.routeAdded(event);
+
+		// assign route legs to this route
+		if (cmd.getLegs() != null && !cmd.getLegs().isEmpty()) {
+			cmd.getLegs()
+					.stream()
+					.map(leg -> new LegAddCommand.Builder()
+								.setBookingId(this.getId().toString())
+								.setCargoId(cmd.getCargoId())
+								.setRouteId(routeId.toString())
+								.setStartLocation(leg.getStartLocation())
+								.setEndLocation(leg.getEndLocation())
+								.setTransType(leg.getTransType())
+								.build())
+					.forEach(legAddCommand -> this.addLeg(legAddCommand));
+					;
+		}
+
 		return routeId;
 	}
 
+	// EVENT SOURCE HANDLER
 	public Booking routeAdded(RouteAddedEvent event) {
-		this.cargoMember(UUID.fromString(event.getCargoId())).routeAdded(event);
+		Cargo cargo = this.cargoMember(UUID.fromString(event.getCargoId()));
+		cargo.setRoute(new Route());
+		cargo.getRoute().routeAdded(event);
 		this.cacheEvent(event);
 		return this;
 	}
@@ -161,10 +242,13 @@ public class Booking {
 		return legId;
 	}
 
+	// EVENT SOURCE HANDLER
 	public Booking legAdded(LegAddedEvent event) {
-		this.cargoMember(UUID.fromString(event.getCargoId()))
-				.getRoute()
-				.legAdded(event);
+		Cargo cargo = this.cargoMember(UUID.fromString(event.getCargoId()));
+		Route route = cargo.getRoute();
+		if (route == null) log.info("===> route is null");////
+		else log.info("route is NOT null");////////
+		route.legAdded(event);
 		this.cacheEvent(event);
 		return this;
 	}
@@ -206,7 +290,7 @@ public class Booking {
 
 	public Leg getLeg(UUID cargoId, UUID legId) {
 		Route route = this.getRoute(cargoId);
-		return route.getLegList().stream().filter(l -> l.id == legId)
+		return route.getLegList().stream().filter(l -> l.id.toString().equals(legId.toString()))
 				.findFirst()
 				.orElseThrow(() ->
 						new LegNotFoundException(String.format(
@@ -216,7 +300,7 @@ public class Booking {
 
 	public Cargo cargoMember(UUID cargoId) {
 		Cargo cargo = getCargoList().stream()
-				.filter(c -> c.getId() == cargoId)
+				.filter(c -> c.getId().toString().equals(cargoId.toString()))
 				.findFirst().orElse(new Cargo(cargoId));
 		return cargo;
 	}

@@ -18,6 +18,7 @@
 package io.agilehandy.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -40,8 +41,14 @@ import java.util.UUID;
 public class Leg {
 
 	UUID id;
+
+	@JsonIgnore
 	UUID bookingId;
+
+	@JsonIgnore
 	UUID cargoId;
+
+	@JsonIgnore
 	UUID routeId;
 
 	Location startLocation;

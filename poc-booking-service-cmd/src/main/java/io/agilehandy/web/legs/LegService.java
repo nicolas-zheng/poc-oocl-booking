@@ -61,4 +61,5 @@ public class LegService {
 						String.format("No Leg found for booking %s and cargo %s", bookingId, cargoId)))
 				;
 	}
+
 }

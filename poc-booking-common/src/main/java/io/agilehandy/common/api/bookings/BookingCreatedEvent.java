@@ -36,7 +36,6 @@ import java.util.List;
 public class BookingCreatedEvent extends BookingBaseEvent implements BookingEvent {
 
 	private String customerId;
-
 	private List<CargoRequest> cargoRequests;
 
 	public static class Builder {

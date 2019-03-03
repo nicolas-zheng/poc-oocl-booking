@@ -17,6 +17,7 @@
 
 package io.agilehandy.core.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
@@ -36,7 +37,11 @@ import java.util.UUID;
 public class Route {
 
 	UUID id;
+
+	@JsonIgnore
 	UUID bookingId;
+
+	@JsonIgnore
 	UUID cargoId;
 
 	Location origin;
@@ -55,7 +60,6 @@ public class Route {
 		this.setCargoId(UUID.fromString(event.getCargoId()));
 		this.setOrigin(event.getOrigin());
 		this.setDestination(event.getDestination());
-		this.setLegList(new ArrayList<>());
 	}
 
 	public void legAdded(LegAddedEvent event) {
@@ -66,7 +70,7 @@ public class Route {
 
 	public Leg legMember(UUID legId) {
 		Leg leg = getLegList().stream()
-				.filter(l -> l.getId() == id)
+				.filter(l -> l.getId() == legId)
 				.findFirst()
 				.orElse(new Leg(legId));
 		this.getLegList().add(leg);

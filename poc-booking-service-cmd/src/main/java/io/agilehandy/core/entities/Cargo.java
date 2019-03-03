@@ -18,6 +18,7 @@
 package io.agilehandy.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -26,7 +27,6 @@ import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
 import io.agilehandy.common.api.model.Location;
-import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -42,6 +42,8 @@ import java.util.UUID;
 public class Cargo {
 
 	UUID id;
+
+	@JsonIgnore
 	UUID bookingId;
 
 	CargoNature nature;
@@ -71,11 +73,6 @@ public class Cargo {
 		this.setCutOffDate(event.getCutOffDate());
 		this.setOrigin(event.getOrigin());
 		this.setDestination(event.getDestination());
-	}
-
-	public void routeAdded(RouteAddedEvent event) {
-		route = new Route(UUID.fromString(event.getRouteId()));
-		route.routeAdded(event);
 	}
 
 }

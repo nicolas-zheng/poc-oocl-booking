@@ -15,12 +15,22 @@
  */
 
 
-package io.agilehandy.common.api;
+package io.agilehandy.common.api.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haytham Mohamed
  **/
 
-public interface BookingCommand {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RouteLeg {
 
+	private Location startLocation;
+	private Location endLocation;
+	private TransportationType transType;
 }
