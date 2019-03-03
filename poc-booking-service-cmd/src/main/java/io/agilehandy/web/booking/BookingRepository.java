@@ -17,7 +17,6 @@
 
 package io.agilehandy.web.booking;
 
-import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.core.pubsub.BookingEventPubSub;
 import org.apache.kafka.streams.state.KeyValueIterator;
@@ -32,6 +31,7 @@ import java.util.List;
 /**
  * @author Haytham Mohamed
  **/
+
 @Component
 public class BookingRepository {
 

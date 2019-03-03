@@ -22,6 +22,7 @@ import java.util.Arrays;
 /**
  * @author Haytham Mohamed
  **/
+
 public enum TransportationType {
 
 	TRUCK ("TRUCK"),

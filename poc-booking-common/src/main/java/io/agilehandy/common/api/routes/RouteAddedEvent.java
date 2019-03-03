@@ -24,6 +24,8 @@ import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Haytham Mohamed
  **/
@@ -38,13 +40,55 @@ public class RouteAddedEvent extends BookingBaseEvent implements BookingEvent {
 	private Location origin;
 	private Location destination;
 
-	public RouteAddedEvent(String bookingId, String cargoId, String routeId, Location origin, Location dest) {
-		super(bookingId, EventTypes.ROUTE_ADDED);
-		this.setBookingId(bookingId);
-		this.cargoId = cargoId;
-		this.routeId = routeId;
-		this.origin = origin;
-		this.destination = dest;
+	public static class Builder {
+		private RouteAddedEvent eventToBuild;
+
+		public Builder() {
+			eventToBuild = new RouteAddedEvent();
+		}
+
+		public RouteAddedEvent build() {
+			eventToBuild.setOccurredOn(LocalDateTime.now());
+			eventToBuild.setType(EventTypes.ROUTE_ADDED);
+			RouteAddedEvent eventBuilt = eventToBuild;
+			eventToBuild = new RouteAddedEvent();
+			return eventBuilt;
+		}
+
+		public Builder setBookingId(String bookingId) {
+			eventToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCargoId(String cargoId) {
+			eventToBuild.setCargoId(cargoId);
+			return this;
+		}
+
+		public Builder setRouteId(String routeId) {
+			eventToBuild.setRouteId(routeId);
+			return this;
+		}
+
+		public Builder setOrigin(String opZone, String facility) {
+			eventToBuild.setOrigin(new Location(opZone, facility));
+			return this;
+		}
+
+		public Builder setOrigin(Location location) {
+			eventToBuild.setOrigin(location);
+			return this;
+		}
+
+		public Builder setDestination(String opZone, String facility) {
+			eventToBuild.setDestination(new Location(opZone, facility));
+			return this;
+		}
+
+		public Builder setDestination(Location location) {
+			eventToBuild.setDestination(location);
+			return this;
+		}
 	}
 
 }

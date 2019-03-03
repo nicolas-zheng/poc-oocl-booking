@@ -25,10 +25,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingBaseEvent;
 import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
+import io.agilehandy.common.api.model.CargoRequest;
+import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Haytham Mohamed
@@ -39,22 +42,60 @@ import java.time.LocalDateTime;
 public class BookingCreatedEvent extends BookingBaseEvent implements BookingEvent {
 
 	private String customerId;
-	private String origin;
-	private String destination;
+	private Location origin;
+	private Location destination;
+	private List<CargoRequest> cargoRequests;
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime cutOffDate;
 
-	public BookingCreatedEvent(String bookingId, String customerId, String origin
-			, String destination, LocalDateTime cutOffDate) {
-		super(bookingId, EventTypes.BOOKING_CREATED);
-		this.setBookingId(bookingId);
-		this.customerId = customerId;
-		this.origin = origin;
-		this.destination = destination;
-		this.cutOffDate = cutOffDate;
+	public static class Builder {
+		private BookingCreatedEvent eventToBuild;
+
+		public Builder() {
+			eventToBuild = new BookingCreatedEvent();
+		}
+
+		public BookingCreatedEvent build() {
+			eventToBuild.setOccurredOn(LocalDateTime.now());
+			eventToBuild.setType(EventTypes.BOOKING_CREATED);
+			BookingCreatedEvent eventBuilt = eventToBuild;
+			eventToBuild = new BookingCreatedEvent();
+			return eventBuilt;
+		}
+
+		public Builder setBookingId(String bookingId) {
+			eventToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCustomerId(String customerId) {
+			eventToBuild.setCustomerId(customerId);
+			return this;
+		}
+
+		public Builder setOrigin(Location origin) {
+			eventToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setDestination(Location destination) {
+			eventToBuild.setDestination(destination);
+			return this;
+		}
+
+		public Builder setCutOffDate(LocalDateTime date) {
+			eventToBuild.setCutOffDate(date);
+			return this;
+		}
+
+		public Builder setCargoRequests(List<CargoRequest> requests) {
+			eventToBuild.setCargoRequests(requests);
+			return this;
+		}
+
 	}
 
 }

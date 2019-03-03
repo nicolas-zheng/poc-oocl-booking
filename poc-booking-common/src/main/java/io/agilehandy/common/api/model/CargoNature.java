@@ -19,6 +19,10 @@ package io.agilehandy.common.api.model;
 
 import java.util.Arrays;
 
+/**
+ * @author Haytham Mohamed
+ **/
+
 public enum CargoNature {
 
 	GENERAL_CARGO("GC"),

@@ -25,6 +25,8 @@ import io.agilehandy.common.api.model.TransportationType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Haytham Mohamed
  **/
@@ -37,19 +39,69 @@ public class LegAddedEvent extends BookingBaseEvent implements BookingEvent {
 	private String routeId;
 	private String legId;
 
-	private Location startLocation;
-	private Location endLocation;
+	private Location start;
+	private Location end;
 	private TransportationType transType;
 
-	public LegAddedEvent(String bookingId, String cargoId, String routeId, String legId,
-	                     Location start, Location end, TransportationType type) {
-		super(bookingId, EventTypes.LEG_ADDED);
-		this.setBookingId(bookingId);
-		this.cargoId = cargoId;
-		this.routeId = routeId;
-		this.legId = legId;
-		this.startLocation = start;
-		this.endLocation = end;
-		this.transType = type;
+	public static class Builder {
+		private LegAddedEvent eventToBuild;
+
+		public Builder() {
+			eventToBuild = new LegAddedEvent();
+		}
+
+		public LegAddedEvent build() {
+			eventToBuild.setOccurredOn(LocalDateTime.now());
+			eventToBuild.setType(EventTypes.LEG_ADDED);
+			LegAddedEvent eventBuilt = eventToBuild;
+			eventToBuild = new LegAddedEvent();
+			return eventBuilt;
+		}
+
+		public Builder setBookingId(String bookingId) {
+			eventToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCargoId(String cargoId) {
+			eventToBuild.setCargoId(cargoId);
+			return this;
+		}
+
+		public Builder setRouteId(String routeId) {
+			eventToBuild.setRouteId(routeId);
+			return this;
+		}
+
+		public Builder setLegId(String legId) {
+			eventToBuild.setLegId(legId);
+			return this;
+		}
+
+		public Builder setStartLocation(String opZone, String facility) {
+			eventToBuild.setStart(new Location(opZone, facility));
+			return this;
+		}
+
+		public Builder setStartLocation(Location location) {
+			eventToBuild.setStart(location);
+			return this;
+		}
+
+		public Builder setEndLocation(String opZone, String facility) {
+			eventToBuild.setEnd(new Location(opZone, facility));
+			return this;
+		}
+
+		public Builder setEndLocation(Location location) {
+			eventToBuild.setEnd(location);
+			return this;
+		}
+
+		public Builder setTransportationType(TransportationType type) {
+			eventToBuild.setTransType(type);
+			return this;
+		}
 	}
+
 }

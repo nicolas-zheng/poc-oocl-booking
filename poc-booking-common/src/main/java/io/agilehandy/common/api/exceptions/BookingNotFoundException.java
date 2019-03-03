@@ -20,6 +20,7 @@ package io.agilehandy.common.api.exceptions;
 /**
  * @author Haytham Mohamed
  **/
+
 public class BookingNotFoundException extends BaseException {
 	public BookingNotFoundException(String message) {
 		super(message);

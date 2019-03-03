@@ -17,34 +17,20 @@
 
 package io.agilehandy.common.api.model;
 
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haytham Mohamed
  **/
 
-public enum ContainerSize {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CargoRequest {
 
-	SIZE_20 ("SIZE_20"),
-	SIZE_40 ("SIZE_40"),
-	;
+	private ContainerSize requiredSize;
+	private CargoNature nature;
 
-	private String value;
-	private static ContainerSize[] allValues = values();
-
-	private ContainerSize(String val) {
-		this.value = val;
-	}
-
-	public String getValue() {
-		return this.value;
-	}
-
-	public static ContainerSize fromValue(String val) {
-		return Arrays.asList(allValues)
-				.stream()
-				.filter(v -> v.equals(val))
-				.findFirst()
-				.orElseGet(() -> SIZE_20);
-	}
 }

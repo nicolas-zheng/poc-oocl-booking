@@ -24,6 +24,7 @@ import io.agilehandy.web.booking.BookingRepository;
 /**
  * @author Haytham Mohamed
  **/
+
 public class CommonService {
 
 	public static Booking getBookingById(BookingRepository repository, String bookingId) {

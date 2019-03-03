@@ -24,11 +24,13 @@ import lombok.NoArgsConstructor;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
 
-	String facility;
+	private String opZone;
+	private String facility;
 
 }

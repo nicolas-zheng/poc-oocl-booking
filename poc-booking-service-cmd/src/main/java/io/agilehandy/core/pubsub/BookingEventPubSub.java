@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Haytham Mohamed
  **/
+
 @Component
 @EnableBinding(BookingEventChannels.class)
 @Slf4j
@@ -69,13 +70,9 @@ public class BookingEventPubSub {
 	@StreamListener(BookingEventChannels.BOOKING_EVENTS_IN)
 	public void snapshot(KStream<String, BookingEvent> events)
 	{
-		Serde<BookingEvent> eventSerde = new JsonSerde<>( BookingEvent.class, new ObjectMapper() );
 		Serde<Booking> BookingSerde = new JsonSerde<>( Booking.class, new ObjectMapper() );
 
 		events
-				//.groupBy( (s, event) ->
-				//		event.getBookingId()
-				//		, Serialized.with(Serdes.String(), eventSerde) )
 				.groupByKey()
 				.aggregate(Booking::new,
 						(key, event, booking) -> booking.handleEvent(event),

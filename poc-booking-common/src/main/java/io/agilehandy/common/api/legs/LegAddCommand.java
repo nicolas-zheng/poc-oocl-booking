@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 public class LegAddCommand implements BookingCommand, Serializable {
 
@@ -53,9 +54,7 @@ public class LegAddCommand implements BookingCommand, Serializable {
 		this.occurredOn = LocalDateTime.now();
 	}
 
-	@Data
 	public static class Builder {
-
 		private LegAddCommand commandToBuild;
 
 		public Builder() {
@@ -98,4 +97,5 @@ public class LegAddCommand implements BookingCommand, Serializable {
 			return this;
 		}
 	}
+
 }

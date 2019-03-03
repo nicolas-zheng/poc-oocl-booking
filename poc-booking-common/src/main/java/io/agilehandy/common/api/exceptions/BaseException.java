@@ -20,6 +20,7 @@ package io.agilehandy.common.api.exceptions;
 /**
  * @author Haytham Mohamed
  **/
+
 public class BaseException extends RuntimeException {
 
 	public BaseException(String message) {

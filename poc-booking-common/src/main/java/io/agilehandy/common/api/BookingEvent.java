@@ -24,6 +24,10 @@ import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.legs.LegAddedEvent;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 
+/**
+ * @author Haytham Mohamed
+ **/
+
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.PROPERTY,
@@ -39,4 +43,5 @@ public interface BookingEvent {
 
 	public String getType();
 	public String getBookingId();
+
 }

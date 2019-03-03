@@ -17,27 +17,31 @@
 
 package io.agilehandy.common.api;
 
+/**
+ * @author Haytham Mohamed
+ **/
+
 public interface EventTypes {
 
-	public final static String UNKNOWN_EVENT = "UNKNOWN";
+	String UNKNOWN_EVENT = "UNKNOWN";
 
-	public final static String BOOKING_CREATED = "BOOKING_CREATED";
-	public final static String BOOKING_UPDATED = "BOOKING_UPDATED";
-	public final static String BOOKING_CANCELED = "BOOKING_CANCELED";
+	String BOOKING_CREATED = "BOOKING_CREATED";
+	String BOOKING_UPDATED = "BOOKING_UPDATED";
+	String BOOKING_CANCELED = "BOOKING_CANCELED";
 
-	public final static String CARGO_CREATED = "CARGO_CREATED";
-	public final static String CARGO_ADDED = "CARGO_ADDED";
-	public final static String CARGO_UPDATED = "CARGO_UPDATED";
-	public final static String CARGO_CANCELED = "CARGO_CANCELED";
+	String CARGO_CREATED = "CARGO_CREATED";
+	String CARGO_ADDED = "CARGO_ADDED";
+	String CARGO_UPDATED = "CARGO_UPDATED";
+	String CARGO_CANCELED = "CARGO_CANCELED";
 
-	public final static String LEG_CREATED = "LEG_CREATED";
-	public final static String LEG_ADDED = "LEG_ADDED";
-	public final static String LEG_UPDATED = "LEG_UPDATED";
-	public final static String LEG_CANCELED = "LEG_CANCELED";
+	String LEG_CREATED = "LEG_CREATED";
+	String LEG_ADDED = "LEG_ADDED";
+	String LEG_UPDATED = "LEG_UPDATED";
+	String LEG_CANCELED = "LEG_CANCELED";
 
-	public final static String ROUTE_CREATED = "ROUTE_CREATED";
-	public final static String ROUTE_ADDED = "ROUTE_ADDED";
-	public final static String ROUTE_UPDATED = "ROUTE_UPDATED";
-	public final static String ROUTE_CANCELED = "ROUTE_CANCELED";
+	String ROUTE_CREATED = "ROUTE_CREATED";
+	String ROUTE_ADDED = "ROUTE_ADDED";
+	String ROUTE_UPDATED = "ROUTE_UPDATED";
+	String ROUTE_CANCELED = "ROUTE_CANCELED";
 
 }

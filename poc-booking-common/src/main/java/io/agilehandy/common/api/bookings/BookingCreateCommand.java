@@ -23,14 +23,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingCommand;
+import io.agilehandy.common.api.model.CargoNature;
+import io.agilehandy.common.api.model.CargoRequest;
+import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 public class BookingCreateCommand implements BookingCommand, Serializable {
 
@@ -40,8 +47,10 @@ public class BookingCreateCommand implements BookingCommand, Serializable {
 	private LocalDateTime occurredOn;
 
 	private String customerId;
-	private String origin;
-	private String destination;
+	private Location origin;
+	private Location destination;
+
+	List<CargoRequest> cargoRequests;
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -52,7 +61,7 @@ public class BookingCreateCommand implements BookingCommand, Serializable {
 		this.occurredOn = LocalDateTime.now();
 	}
 
-	@Data
+
 	public static class Builder {
 
 		private BookingCreateCommand commandToBuild;
@@ -72,18 +81,26 @@ public class BookingCreateCommand implements BookingCommand, Serializable {
 			return this;
 		}
 
-		public Builder setOrigin(String origin) {
+		public Builder setOrigin(Location origin) {
 			commandToBuild.setOrigin(origin);
 			return this;
 		}
 
-		public Builder setDestination(String destination) {
+		public Builder setDestination(Location destination) {
 			commandToBuild.setDestination(destination);
 			return this;
 		}
 
 		public Builder setCutOffDate(LocalDateTime cutoffDate) {
 			commandToBuild.setCutOffDate(cutoffDate);
+			return this;
+		}
+
+		public Builder requestCargo(ContainerSize size, CargoNature nature) {
+			if (commandToBuild.getCargoRequests() != null) {
+				commandToBuild.setCargoRequests(new ArrayList<>());
+			}
+			commandToBuild.getCargoRequests().add(new CargoRequest(size, nature));
 			return this;
 		}
 	}

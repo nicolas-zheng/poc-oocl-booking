@@ -29,6 +29,7 @@ import java.util.UUID;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 @NoArgsConstructor
 public class Route {
@@ -44,24 +45,24 @@ public class Route {
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		legList = new ArrayList<>();
-		this.id = UUID.fromString(event.getRouteId());
-		this.bookingId = UUID.fromString(event.getBookingId());
-		this.cargoId = UUID.fromString(event.getCargoId());
+		this.setLegList(new ArrayList<>());
+		this.setId(UUID.fromString(event.getRouteId()));
+		this.setBookingId(UUID.fromString(event.getBookingId()));
+		this.setCargoId(UUID.fromString(event.getCargoId()));
 	}
 
 	public void legAdded(LegAddedEvent event) {
 		Leg leg = legMember(UUID.fromString(event.getLegId()));
 		leg.legAdded(event);
-		this.legList.add(leg);
+		this.getLegList().add(leg);
 	}
 
 	public Leg legMember(UUID legId) {
-		Leg leg = legList.stream()
+		Leg leg = getLegList().stream()
 				.filter(l -> l.getId() == id)
 				.findFirst()
 				.orElse(new Leg(legId));
-		this.legList.add(leg);
+		this.getLegList().add(leg);
 		return leg;
 	}
 

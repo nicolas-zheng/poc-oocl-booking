@@ -55,4 +55,5 @@ public class CargoService {
 		Booking booking = CommonService.getBookingById(repository, bookingId);
 		return booking.getCargo(UUID.fromString(cargoId));
 	}
+
 }

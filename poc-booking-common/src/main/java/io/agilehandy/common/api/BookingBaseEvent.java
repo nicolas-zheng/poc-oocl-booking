@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 public class BookingBaseEvent implements Serializable {
 
