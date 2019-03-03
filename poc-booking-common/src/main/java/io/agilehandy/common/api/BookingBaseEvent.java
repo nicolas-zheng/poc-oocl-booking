@@ -17,6 +17,7 @@
 
 package io.agilehandy.common.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -37,15 +38,16 @@ public class BookingBaseEvent implements Serializable {
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime occurredOn;
 
 	public BookingBaseEvent() {
 		this.occurredOn = LocalDateTime.now();
 	}
 
-	public BookingBaseEvent(String bookingId, String type) {
+	public BookingBaseEvent(String bookingId, String eventType) {
 		this.bookingId = bookingId;
-		this.type = type;
+		this.type = eventType;
 		this.occurredOn = LocalDateTime.now();
 	}
 }

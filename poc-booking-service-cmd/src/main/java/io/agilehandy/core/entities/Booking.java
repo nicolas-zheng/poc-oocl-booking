@@ -17,9 +17,12 @@
 
 package io.agilehandy.core.entities;
 
-import io.agilehandy.common.api.BookingBaseEvent;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingEvent;
-import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
 import io.agilehandy.common.api.cargos.CargoAddCommand;
@@ -33,16 +36,16 @@ import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import javaslang.API;
-import javaslang.Predicates;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static javaslang.API.*;
+import static javaslang.Predicates.*;
 
 /**
  * @author Haytham Mohamed
@@ -54,14 +57,18 @@ import static javaslang.API.*;
 @Slf4j
 public class Booking {
 
-	private List<BookingBaseEvent> cache = new ArrayList<>();
+	private List<BookingEvent> cache = new ArrayList<>();
 
 	UUID id;
 
 	UUID customerId;
 	Location origin;
 	Location destination;
-	LocalDate cutOffDate;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	LocalDateTime cutOffDate;
 
 	List<Cargo> cargoList;
 
@@ -141,15 +148,15 @@ public class Booking {
 	}
 
 	public Booking handleEvent(BookingEvent event) {
-		return API.Match(event.getType()).of(
-				Case(Predicates.is(EventTypes.BOOKING_CREATED), this.bookingCreated((BookingCreatedEvent) event))
-				, Case(Predicates.is(EventTypes.CARGO_ADDED), this.cargoAdded((CargoAddedEvent) event))
-				, Case(Predicates.is(EventTypes.ROUTE_ADDED), this.routeAdded((RouteAddedEvent) event))
-				, Case(Predicates.is(EventTypes.LEG_ADDED), this.legAdded((LegAddedEvent) event))
+		return API.Match(event).of(
+				Case( $( instanceOf( BookingCreatedEvent.class ) ), this::bookingCreated)
+				, Case( $( instanceOf( CargoAddedEvent.class ) ), this::cargoAdded)
+				, Case( $( instanceOf( RouteAddedEvent.class ) ), this::routeAdded)
+				, Case( $( instanceOf( LegAddedEvent.class ) ), this::legAdded)
 		);
 	}
 
-	public void cacheEvent(BookingBaseEvent event) {
+	public void cacheEvent(BookingEvent event) {
 		cache.add(event);
 	}
 

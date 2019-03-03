@@ -18,10 +18,7 @@
 package io.agilehandy.core.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.agilehandy.common.api.BookingBaseEvent;
 import io.agilehandy.common.api.BookingEvent;
-import io.agilehandy.common.api.EventTypes;
-import io.agilehandy.common.api.bookings.BookingCreatedEvent;
 import io.agilehandy.core.entities.Booking;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
@@ -29,7 +26,6 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Serialized;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -57,9 +53,9 @@ public class BookingEventPubSub {
 		this.channels = channels;
 	}
 
-	public void publish(BookingBaseEvent event)
+	public void publish(BookingEvent event)
 	{
-		Message<BookingBaseEvent> message = MessageBuilder
+		Message<BookingEvent> message = MessageBuilder
 				.withPayload(event)
 				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getBookingId().getBytes())
 				.setHeader(HEADER_EVENT_TYPE, event.getType())
@@ -77,23 +73,16 @@ public class BookingEventPubSub {
 		Serde<Booking> BookingSerde = new JsonSerde<>( Booking.class, new ObjectMapper() );
 
 		events
-				.groupBy( (s, event) ->
-						event.getBookingId()
-						, Serialized.with(Serdes.String(), eventSerde) )
-				//.groupByKey()
+				//.groupBy( (s, event) ->
+				//		event.getBookingId()
+				//		, Serialized.with(Serdes.String(), eventSerde) )
+				.groupByKey()
 				.aggregate(Booking::new,
 						(key, event, booking) -> booking.handleEvent(event),
 									Materialized.<String, Booking, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)
 									.withKeySerde(Serdes.String())
 									.withValueSerde(BookingSerde)
 				);
-	}
-
-	public JsonSerde getEventSerde(BookingEvent event) {
-		if (event.getType().equals(EventTypes.BOOKING_CREATED)) {
-			return new JsonSerde<>( BookingCreatedEvent.class, new ObjectMapper() );
-		}
-		return new JsonSerde<>( BookingEvent.class, new ObjectMapper() );
 	}
 
 }

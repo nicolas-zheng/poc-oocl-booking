@@ -17,17 +17,18 @@
 
 package io.agilehandy.common.api.bookings;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingBaseEvent;
 import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
@@ -41,12 +42,13 @@ public class BookingCreatedEvent extends BookingBaseEvent implements BookingEven
 	private String origin;
 	private String destination;
 
-	@JsonSerialize(using = LocalDateSerializer.class)
-	@JsonDeserialize(using = LocalDateDeserializer.class)
-	private LocalDate cutOffDate;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime cutOffDate;
 
-	public BookingCreatedEvent(String bookingId,String customerId,String origin
-			,String destintation,LocalDate cutOffDate) {
+	public BookingCreatedEvent(String bookingId, String customerId, String origin
+			, String destination, LocalDateTime cutOffDate) {
 		super(bookingId, EventTypes.BOOKING_CREATED);
 		this.setBookingId(bookingId);
 		this.customerId = customerId;
