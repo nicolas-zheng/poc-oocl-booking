@@ -17,6 +17,7 @@
 
 package io.agilehandy.web.legs;
 
+import io.agilehandy.common.api.exceptions.LegNotFoundException;
 import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.core.entities.Leg;
@@ -47,14 +48,17 @@ public class LegService {
 		return legId;
 	}
 
-	public List<Leg> getLegs(String bookingId, String cargoId, String routeId) {
+	public List<Leg> getLegs(String bookingId, String cargoId) {
 		Booking booking = CommonService.getBookingById(repository, bookingId);
-		return booking.getRoute(UUID.fromString(cargoId), UUID.fromString(routeId)).getLegList();
+		return booking.getCargo(UUID.fromString(cargoId)).getRoute().getLegList();
 	}
 
-	public Leg getLeg(String bookingId, String cargoId, String routeId, String legId) {
-		Booking booking = CommonService.getBookingById(repository, bookingId);
-		return booking.getLeg(UUID.fromString(cargoId), UUID.fromString(routeId)
-				, UUID.fromString(legId));
+	public Leg getLeg(String bookingId, String cargoId, String legId) {
+		return this.getLegs(bookingId, cargoId).stream()
+				.filter(leg -> leg.getId().toString().equals(legId))
+				.findFirst()
+				.orElseThrow(() -> new LegNotFoundException(
+						String.format("No Leg found for booking %s and cargo %s", bookingId, cargoId)))
+				;
 	}
 }

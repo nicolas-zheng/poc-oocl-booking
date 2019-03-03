@@ -25,6 +25,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingCommand;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -43,6 +44,14 @@ public class CargoAddCommand implements BookingCommand, Serializable {
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime occurredOn;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime cutOffDate;
+
+	private Location origin;
+	private Location destination;
 
 	private CargoNature nature;
 	private ContainerSize requiredSize;
@@ -74,8 +83,23 @@ public class CargoAddCommand implements BookingCommand, Serializable {
 			return this;
 		}
 
+		public Builder setOrigin(Location origin) {
+			commandToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setDestination(Location destination) {
+			commandToBuild.setDestination(destination);
+			return this;
+		}
+
 		public Builder setRequiredSize(ContainerSize containerSize) {
 			commandToBuild.setRequiredSize(containerSize);
+			return this;
+		}
+
+		public Builder setCutOffDate(LocalDateTime cutoffDate) {
+			commandToBuild.setCutOffDate(cutoffDate);
 			return this;
 		}
 	}

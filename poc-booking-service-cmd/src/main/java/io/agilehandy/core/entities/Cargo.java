@@ -17,15 +17,20 @@
 
 package io.agilehandy.core.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.cargos.CargoAddedEvent;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -43,33 +48,34 @@ public class Cargo {
 	ContainerSize requiredSize;
 	ContainerSize assignedSize;
 
-	List<Route> routeList;
+	Location origin;
+	Location destination;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	LocalDateTime cutOffDate;
+
+	Route route;
 
 	public Cargo(UUID cargoId) {
 		this.id = cargoId;
 	}
 
 	public void cargoAdded(CargoAddedEvent event) {
-		this.setRouteList(new ArrayList<>());
+		this.setRoute(new Route());
 		this.setId(UUID.fromString(event.getCargoId()));
 		this.setBookingId(UUID.fromString(event.getBookingId()));
 		this.setNature(event.getNature());
 		this.setRequiredSize(event.getRequiredSize());
+		this.setCutOffDate(event.getCutOffDate());
+		this.setOrigin(event.getOrigin());
+		this.setDestination(event.getDestination());
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		Route route = this.routeMember(UUID.fromString(event.getRouteId()));
+		route = new Route(UUID.fromString(event.getRouteId()));
 		route.routeAdded(event);
-		this.getRouteList().add(route);
-	}
-
-	public Route routeMember(UUID routeId) {
-		Route route = getRouteList().stream()
-				.filter(r -> r.getId() == routeId)
-				.findFirst()
-				.orElse(new Route(routeId));
-		this.getRouteList().add(route);
-		return route;
 	}
 
 }

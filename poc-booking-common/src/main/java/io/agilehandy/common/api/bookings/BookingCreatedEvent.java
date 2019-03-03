@@ -17,16 +17,10 @@
 
 package io.agilehandy.common.api.bookings;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingBaseEvent;
 import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.model.CargoRequest;
-import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -42,14 +36,8 @@ import java.util.List;
 public class BookingCreatedEvent extends BookingBaseEvent implements BookingEvent {
 
 	private String customerId;
-	private Location origin;
-	private Location destination;
-	private List<CargoRequest> cargoRequests;
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime cutOffDate;
+	private List<CargoRequest> cargoRequests;
 
 	public static class Builder {
 		private BookingCreatedEvent eventToBuild;
@@ -73,21 +61,6 @@ public class BookingCreatedEvent extends BookingBaseEvent implements BookingEven
 
 		public Builder setCustomerId(String customerId) {
 			eventToBuild.setCustomerId(customerId);
-			return this;
-		}
-
-		public Builder setOrigin(Location origin) {
-			eventToBuild.setOrigin(origin);
-			return this;
-		}
-
-		public Builder setDestination(Location destination) {
-			eventToBuild.setDestination(destination);
-			return this;
-		}
-
-		public Builder setCutOffDate(LocalDateTime date) {
-			eventToBuild.setCutOffDate(date);
 			return this;
 		}
 

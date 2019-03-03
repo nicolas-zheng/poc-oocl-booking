@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author Haytham Mohamed
  **/
@@ -45,14 +43,9 @@ public class RouteController {
 		return service.addRoute(cmd);
 	}
 
-	@GetMapping("/{bookingId}/cargos/{cargoId}/routes/{routeId}")
-	public Route getRoute(@PathVariable String bookingId, @PathVariable String cargoId,
-                          @PathVariable String routeId) {
-		return service.getRoute(bookingId, cargoId, routeId);
+	@GetMapping("/{bookingId}/cargos/{cargoId}/routes")
+	public Route getRoute(@PathVariable String bookingId, @PathVariable String cargoId) {
+		return service.getRoute(bookingId, cargoId);
 	}
 
-	@GetMapping("/{bookingId}/cargos/{cargoId}/routes")
-	public List<Route> getRoutes(@PathVariable String bookingId, @PathVariable String cargoId) {
-		return service.getRoutes(bookingId, cargoId);
-	}
 }

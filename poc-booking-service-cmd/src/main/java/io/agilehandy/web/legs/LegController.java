@@ -48,12 +48,12 @@ public class LegController {
 	@GetMapping("/{bookingId}/cargos/{cargoId}/routes/{routeId}/legs/{legId}")
 	public Leg getLeg(@PathVariable String bookingId, @PathVariable String cargoId,
 	                  @PathVariable String routeId, @PathVariable String legId) {
-		return service.getLeg(bookingId, cargoId, routeId, legId);
+		return service.getLeg(bookingId, cargoId, legId);
 	}
 
 	@GetMapping("/{bookingId}/cargos/{cargoId}/routes/{routeId}/legs")
 	public List<Leg> getLegs(@PathVariable String bookingId, @PathVariable String cargoId,
 	                         @PathVariable String routeId) {
-		return service.getLegs(bookingId, cargoId, routeId);
+		return service.getLegs(bookingId, cargoId);
 	}
 }

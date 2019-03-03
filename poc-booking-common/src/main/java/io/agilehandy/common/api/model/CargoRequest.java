@@ -17,9 +17,16 @@
 
 package io.agilehandy.common.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
@@ -32,5 +39,53 @@ public class CargoRequest {
 
 	private ContainerSize requiredSize;
 	private CargoNature nature;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime cutOffDate;
+
+	private Location origin;
+	private Location destination;
+
+	public static class Builder {
+
+		private CargoRequest requestToBuild;
+
+		public Builder() {
+			requestToBuild = new CargoRequest();
+		}
+
+		public CargoRequest build() {
+			CargoRequest requestBuilt = requestToBuild;
+			requestToBuild = new CargoRequest();
+			return requestToBuild;
+		}
+
+		public Builder setRequiredSize(ContainerSize size) {
+			requestToBuild.setRequiredSize(size);
+			return this;
+		}
+
+		public Builder setNature(CargoNature nature) {
+			requestToBuild.setNature(nature);
+			return this;
+		}
+
+		public Builder setCutOffDate(LocalDateTime cutOffDate) {
+			requestToBuild.setCutOffDate(cutOffDate);
+			return this;
+		}
+
+		public Builder setOrigin(Location location) {
+			requestToBuild.setOrigin(location);
+			return this;
+		}
+
+		public Builder setDestination(Location location) {
+			requestToBuild.setDestination(location);
+			return this;
+		}
+	}
 
 }

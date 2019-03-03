@@ -18,6 +18,7 @@
 package io.agilehandy.core.entities;
 
 import io.agilehandy.common.api.legs.LegAddedEvent;
+import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,9 @@ public class Route {
 	UUID bookingId;
 	UUID cargoId;
 
+	Location origin;
+	Location destination;
+
 	List<Leg> legList;
 
 	public Route(UUID routeId) {
@@ -49,6 +53,9 @@ public class Route {
 		this.setId(UUID.fromString(event.getRouteId()));
 		this.setBookingId(UUID.fromString(event.getBookingId()));
 		this.setCargoId(UUID.fromString(event.getCargoId()));
+		this.setOrigin(event.getOrigin());
+		this.setDestination(event.getDestination());
+		this.setLegList(new ArrayList<>());
 	}
 
 	public void legAdded(LegAddedEvent event) {

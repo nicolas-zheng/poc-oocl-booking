@@ -17,6 +17,7 @@
 
 package io.agilehandy.web.routes;
 
+import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.core.entities.Route;
@@ -47,14 +48,13 @@ public class RouteService {
 		return routeId;
 	}
 
-	public List<Route> getRoutes(String bookingId, String cargoId) {
+	public Route getRoute(String bookingId, String cargoId) {
 		Booking booking = CommonService.getBookingById(repository, bookingId);
-		return booking.getCargo(UUID.fromString(cargoId)).getRouteList();
+		return booking.getCargo(UUID.fromString(cargoId)).getRoute();
 	}
 
-	public Route getRoute(String bookingId, String cargoId, String routeId) {
-		Booking booking = CommonService.getBookingById(repository, bookingId);
-		return booking.getRoute(UUID.fromString(cargoId), UUID.fromString(routeId));
+	public List<Location> getRouteForCargo(Location origin, Location destintaion) {
+		return null;
 	}
 
 }

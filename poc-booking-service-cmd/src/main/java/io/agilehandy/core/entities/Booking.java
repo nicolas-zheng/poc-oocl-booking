@@ -17,12 +17,7 @@
 
 package io.agilehandy.core.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.common.api.bookings.BookingCreatedEvent;
@@ -33,14 +28,12 @@ import io.agilehandy.common.api.exceptions.LegNotFoundException;
 import io.agilehandy.common.api.exceptions.RouteNotFoundException;
 import io.agilehandy.common.api.legs.LegAddCommand;
 import io.agilehandy.common.api.legs.LegAddedEvent;
-import io.agilehandy.common.api.model.Location;
 import io.agilehandy.common.api.routes.RouteAddCommand;
 import io.agilehandy.common.api.routes.RouteAddedEvent;
 import javaslang.API;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -64,13 +57,6 @@ public class Booking {
 	UUID id;
 
 	UUID customerId;
-	Location origin;
-	Location destination;
-
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	LocalDateTime cutOffDate;
 
 	List<Cargo> cargoList;
 
@@ -83,9 +69,6 @@ public class Booking {
 				new BookingCreatedEvent.Builder()
 				.setBookingId(bookingId.toString())
 				.setCustomerId(UUID.randomUUID().toString())
-				.setOrigin(cmd.getOrigin())
-				.setDestination(cmd.getDestination())
-				.setCutOffDate(cmd.getCutOffDate())
 				.setCargoRequests(cmd.getCargoRequests())
 				.build();
 		this.bookingCreated(event);
@@ -98,6 +81,9 @@ public class Booking {
 								.setBookingId(bookingId.toString())
 								.setRequiredSize(cargoRequest.getRequiredSize())
 								.setNature(cargoRequest.getNature())
+								.setCutOffDate(cargoRequest.getCutOffDate())
+								.setOrigin(cargoRequest.getOrigin())
+								.setDestination(cargoRequest.getDestination())
 								.build();
 				this.addCargo(cargoAddCommand);
 			});
@@ -107,9 +93,6 @@ public class Booking {
 	public Booking bookingCreated(BookingCreatedEvent event) {
 		this.setId(UUID.fromString(event.getBookingId()));
 		this.setCustomerId(UUID.fromString(event.getCustomerId()));
-		this.setCutOffDate(event.getCutOffDate());
-		this.setOrigin(event.getOrigin());
-		this.setDestination(event.getDestination());
 		this.setCargoList(new ArrayList<>());
 		this.cacheEvent(event);
 		return this;
@@ -124,6 +107,9 @@ public class Booking {
 				.setCargoId(cargoId.toString())
 				.setNature(cmd.getNature())
 				.setRequiredSize(cmd.getRequiredSize())
+				.setOrigin(cmd.getOrigin())
+				.setDestination(cmd.getDestination())
+				.setCutOffDate(cmd.getCutOffDate())
 				.build();
 		this.cargoAdded(event);
 		return cargoId;
@@ -177,8 +163,8 @@ public class Booking {
 
 	public Booking legAdded(LegAddedEvent event) {
 		this.cargoMember(UUID.fromString(event.getCargoId()))
-						.routeMember(UUID.fromString(event.getRouteId()))
-						.legAdded(event);
+				.getRoute()
+				.legAdded(event);
 		this.cacheEvent(event);
 		return this;
 	}
@@ -208,23 +194,24 @@ public class Booking {
 						String.format("No Cargo found with %s ", cargoId)));
 	}
 
-	public Route getRoute(UUID cargoId, UUID routeId) {
+	public Route getRoute(UUID cargoId) {
 		Cargo cargo = this.getCargo(cargoId);
-		return cargo.getRouteList().stream().filter(r -> r.id == routeId)
-				.findFirst()
-				.orElseThrow(() ->
-						new RouteNotFoundException(String.format(
-							"No Route found with id %s for Cargo id %s ", routeId, cargoId)));
+		Route route = cargo.getRoute();
+		if (route == null) {
+			throw new RouteNotFoundException(String.format(
+					"No Route found for Cargo id %s ", cargoId));
+		}
+		return route;
 	}
 
-	public Leg getLeg(UUID cargoId, UUID routeId, UUID legId) {
-		Route route = this.getRoute(cargoId, routeId);
+	public Leg getLeg(UUID cargoId, UUID legId) {
+		Route route = this.getRoute(cargoId);
 		return route.getLegList().stream().filter(l -> l.id == legId)
 				.findFirst()
 				.orElseThrow(() ->
 						new LegNotFoundException(String.format(
 							"No Leg found with id %s for Cargo id %s and Route id %s"
-								, legId, cargoId, routeId)));
+								, legId, cargoId, route.getId())));
 	}
 
 	public Cargo cargoMember(UUID cargoId) {

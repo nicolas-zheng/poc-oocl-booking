@@ -17,11 +17,17 @@
 
 package io.agilehandy.common.api.cargos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingBaseEvent;
 import io.agilehandy.common.api.BookingEvent;
 import io.agilehandy.common.api.EventTypes;
 import io.agilehandy.common.api.model.CargoNature;
 import io.agilehandy.common.api.model.ContainerSize;
+import io.agilehandy.common.api.model.Location;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,8 +43,16 @@ public class CargoAddedEvent extends BookingBaseEvent implements BookingEvent {
 
 	private String cargoId;
 
+	private Location origin;
+	private Location destination;
+
 	private CargoNature nature;
 	private ContainerSize requiredSize;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime cutOffDate;
 
 	public static class Builder {
 		private CargoAddedEvent eventToBuild;
@@ -70,8 +84,23 @@ public class CargoAddedEvent extends BookingBaseEvent implements BookingEvent {
 			return this;
 		}
 
+		public Builder setOrigin(Location origin) {
+			eventToBuild.setOrigin(origin);
+			return this;
+		}
+
+		public Builder setDestination(Location destination) {
+			eventToBuild.setDestination(destination);
+			return this;
+		}
+
 		public Builder setRequiredSize(ContainerSize size) {
 			eventToBuild.setRequiredSize(size);
+			return this;
+		}
+
+		public Builder setCutOffDate(LocalDateTime date) {
+			eventToBuild.setCutOffDate(date);
 			return this;
 		}
 	}
