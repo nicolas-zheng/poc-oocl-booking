@@ -20,6 +20,7 @@ package io.agilehandy.common.api.exceptions;
 /**
  * @author Haytham Mohamed
  **/
+
 public class RouteNotFoundException extends BaseException {
 	public RouteNotFoundException(String message) {
 		super(message);

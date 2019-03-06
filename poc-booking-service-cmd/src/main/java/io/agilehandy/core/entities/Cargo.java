@@ -31,6 +31,7 @@ import java.util.UUID;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 @NoArgsConstructor
 public class Cargo {
@@ -49,25 +50,25 @@ public class Cargo {
 	}
 
 	public void cargoAdded(CargoAddedEvent event) {
-		routeList = new ArrayList<>();
-		this.id = UUID.fromString(event.getCargoId());
-		this.bookingId = UUID.fromString(event.getBookingId());
-		this.nature = event.getNature();
-		this.requiredSize = event.getRequiredSize();
+		this.setRouteList(new ArrayList<>());
+		this.setId(UUID.fromString(event.getCargoId()));
+		this.setBookingId(UUID.fromString(event.getBookingId()));
+		this.setNature(event.getNature());
+		this.setRequiredSize(event.getRequiredSize());
 	}
 
 	public void routeAdded(RouteAddedEvent event) {
-		Route route = routeMember(UUID.fromString(event.getRouteId()));
+		Route route = this.routeMember(UUID.fromString(event.getRouteId()));
 		route.routeAdded(event);
-		routeList.add(route);
+		this.getRouteList().add(route);
 	}
 
 	public Route routeMember(UUID routeId) {
-		Route route = routeList.stream()
+		Route route = getRouteList().stream()
 				.filter(r -> r.getId() == routeId)
 				.findFirst()
 				.orElse(new Route(routeId));
-		this.routeList.add(route);
+		this.getRouteList().add(route);
 		return route;
 	}
 

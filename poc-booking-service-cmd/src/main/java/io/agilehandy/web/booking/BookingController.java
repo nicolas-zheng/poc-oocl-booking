@@ -30,6 +30,7 @@ import java.util.UUID;
 /**
  * @author Haytham Mohamed
  **/
+
 @RestController
 public class BookingController {
 

@@ -25,6 +25,8 @@ import io.agilehandy.common.api.model.ContainerSize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Haytham Mohamed
  **/
@@ -38,13 +40,40 @@ public class CargoAddedEvent extends BookingBaseEvent implements BookingEvent {
 	private CargoNature nature;
 	private ContainerSize requiredSize;
 
-	public CargoAddedEvent(String bookingId, String cargoId, CargoNature nature
-			, ContainerSize requiredSize) {
-		super(bookingId, EventTypes.CARGO_ADDED);
-		this.setBookingId(bookingId);
-		this.cargoId = cargoId;
-		this.nature = nature;
-		this.requiredSize = requiredSize;
+	public static class Builder {
+		private CargoAddedEvent eventToBuild;
+
+		public Builder() {
+			eventToBuild = new CargoAddedEvent();
+		}
+
+		public CargoAddedEvent build() {
+			eventToBuild.setOccurredOn(LocalDateTime.now());
+			eventToBuild.setType(EventTypes.CARGO_ADDED);
+			CargoAddedEvent eventBuilt = eventToBuild;
+			eventToBuild = new CargoAddedEvent();
+			return eventBuilt;
+		}
+
+		public Builder setBookingId(String bookingId) {
+			eventToBuild.setBookingId(bookingId);
+			return this;
+		}
+
+		public Builder setCargoId(String cargoId) {
+			eventToBuild.setCargoId(cargoId);
+			return this;
+		}
+
+		public Builder setNature(CargoNature cargoNature) {
+			eventToBuild.setNature(cargoNature);
+			return this;
+		}
+
+		public Builder setRequiredSize(ContainerSize size) {
+			eventToBuild.setRequiredSize(size);
+			return this;
+		}
 	}
 
 }

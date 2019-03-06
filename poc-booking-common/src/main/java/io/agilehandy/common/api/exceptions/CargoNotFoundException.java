@@ -20,6 +20,7 @@ package io.agilehandy.common.api.exceptions;
 /**
  * @author Haytham Mohamed
  **/
+
 public class CargoNotFoundException extends BaseException {
 	public CargoNotFoundException(String message) {
 		super(message);

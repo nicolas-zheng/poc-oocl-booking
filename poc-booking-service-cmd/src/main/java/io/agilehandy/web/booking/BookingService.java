@@ -20,6 +20,7 @@ package io.agilehandy.web.booking;
 import io.agilehandy.common.api.bookings.BookingCreateCommand;
 import io.agilehandy.core.entities.Booking;
 import io.agilehandy.web.CommonService;
+import io.agilehandy.web.cargos.CargoService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -27,13 +28,16 @@ import java.util.UUID;
 /**
  * @author Haytham Mohamed
  **/
+
 @Service
 public class BookingService {
 
 	private final BookingRepository repository;
+	private final CargoService cargoService;
 
-	public BookingService(BookingRepository repository) {
+	public BookingService(BookingRepository repository, CargoService cargoService) {
 		this.repository = repository;
+		this.cargoService = cargoService;
 	}
 
 	public String createBooking(BookingCreateCommand cmd) {

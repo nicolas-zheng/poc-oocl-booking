@@ -20,6 +20,7 @@ package io.agilehandy.common.api.exceptions;
 /**
  * @author Haytham Mohamed
  **/
+
 public class LegNotFoundException extends BaseException {
 	public LegNotFoundException(String message) {
 		super(message);

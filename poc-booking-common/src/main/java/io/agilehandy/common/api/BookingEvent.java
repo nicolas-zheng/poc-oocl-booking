@@ -17,8 +17,31 @@
 
 package io.agilehandy.common.api;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.agilehandy.common.api.bookings.BookingCreatedEvent;
+import io.agilehandy.common.api.cargos.CargoAddedEvent;
+import io.agilehandy.common.api.legs.LegAddedEvent;
+import io.agilehandy.common.api.routes.RouteAddedEvent;
+
+/**
+ * @author Haytham Mohamed
+ **/
+
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		include = JsonTypeInfo.As.PROPERTY,
+		property = "type")
+@JsonSubTypes({
+		@JsonSubTypes.Type(name = "BOOKING_CREATED", value = BookingCreatedEvent.class),
+		@JsonSubTypes.Type(name = "CARGO_ADDED", value = CargoAddedEvent.class),
+		@JsonSubTypes.Type(name = "ROUTE_ADDED", value = RouteAddedEvent.class),
+		@JsonSubTypes.Type(name = "LEG_ADDED", value = LegAddedEvent.class)
+})
+
 public interface BookingEvent {
 
 	public String getType();
 	public String getBookingId();
+
 }

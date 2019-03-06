@@ -19,6 +19,10 @@ package io.agilehandy.common.api;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Haytham Mohamed
+ **/
+
 public interface BookingCommand {
 
 	public LocalDateTime getOccurredOn();

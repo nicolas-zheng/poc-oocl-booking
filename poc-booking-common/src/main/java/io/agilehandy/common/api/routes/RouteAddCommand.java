@@ -25,7 +25,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.agilehandy.common.api.BookingCommand;
 import io.agilehandy.common.api.model.Location;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -33,6 +32,7 @@ import java.time.LocalDateTime;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 public class RouteAddCommand implements BookingCommand, Serializable {
 
@@ -42,7 +42,6 @@ public class RouteAddCommand implements BookingCommand, Serializable {
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime occurredOn;
 
 	private Location origin;
@@ -52,9 +51,7 @@ public class RouteAddCommand implements BookingCommand, Serializable {
 		this.occurredOn = LocalDateTime.now();
 	}
 
-	@Data
 	public static class Builder {
-
 		private RouteAddCommand commandToBuild;
 
 		public Builder() {

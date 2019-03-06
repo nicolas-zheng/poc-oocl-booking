@@ -29,6 +29,7 @@ import java.util.UUID;
 /**
  * @author Haytham Mohamed
  **/
+
 @Data
 @NoArgsConstructor
 public class Leg {
@@ -49,13 +50,13 @@ public class Leg {
 	}
 
 	public void legAdded(LegAddedEvent event) {
-		this.id = UUID.fromString(event.getLegId());
-		this.bookingId = UUID.fromString(event.getBookingId());
-		this.cargoId = UUID.fromString(event.getCargoId());
-		this.routeId = UUID.fromString(event.getRouteId());
-		this.startLocation = event.getStartLocation();
-		this.endLocation = event.getEndLocation();
-		this.transType = event.getTransType();
+		this.setId(UUID.fromString(event.getLegId()));
+		this.setBookingId(UUID.fromString(event.getBookingId()));
+		this.setCargoId(UUID.fromString(event.getCargoId()));
+		this.setRouteId(UUID.fromString(event.getRouteId()));
+		this.setStartLocation(event.getStart());
+		this.setEndLocation(event.getEnd());
+		this.setTransType(event.getTransType());
 	}
 
 }

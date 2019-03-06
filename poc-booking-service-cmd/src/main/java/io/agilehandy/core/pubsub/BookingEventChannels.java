@@ -22,6 +22,10 @@ import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 
+/**
+ * @author Haytham Mohamed
+ **/
+
 public interface BookingEventChannels {
 
 	String BOOKING_EVENTS_IN = "input";
